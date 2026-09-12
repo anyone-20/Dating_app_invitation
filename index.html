@@ -11,21 +11,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Shantell+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    .font-cute {
-      font-family: 'Shantell Sans', cursive;
-    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-cute { font-family: 'Shantell Sans', cursive; }
     @keyframes floatSlow {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       50% { transform: translateY(-8px) rotate(2deg); }
     }
-    .animate-float {
-      animation: floatSlow 3.5s ease-in-out infinite;
-    }
+    .animate-float { animation: floatSlow 3.5s ease-in-out infinite; }
     .glass-card {
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(16px);
       box-shadow: 0 20px 45px -15px rgba(244, 114, 182, 0.25);
     }
@@ -35,20 +29,17 @@
 
   <div class="w-full max-w-md glass-card rounded-[2.5rem] border-2 border-white/80 p-6 md:p-8 relative overflow-hidden transition-all duration-300">
 
-    <!-- ========================================== -->
-    <!-- VIEW 1: CREATOR (Setup Invitation)         -->
-    <!-- ========================================== -->
+    <!-- VIEW 1: CREATOR -->
     <div id="creator-view">
       <div class="text-center mb-6">
         <div class="inline-block p-3 bg-pink-100 rounded-3xl mb-2 animate-float">
           <span class="text-4xl">💌</span>
         </div>
         <h1 class="text-2xl font-extrabold text-pink-600 font-cute tracking-tight">Plan a Date Invitation</h1>
-        <p class="text-xs text-slate-500 font-medium mt-1">Set your available days, pick cute ideas, & get RSVP alerts!</p>
+        <p class="text-xs text-slate-500 font-medium mt-1">Set your available days, add clear photos, & get RSVP alerts!</p>
       </div>
 
       <form id="creator-form" class="space-y-4" onsubmit="generateInviteLink(event)">
-        <!-- Name Inputs -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">Your Name</label>
@@ -60,13 +51,11 @@
           </div>
         </div>
 
-        <!-- Creator's Notification Email -->
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Your Email (To receive their RSVP)</label>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Your Email (For RSVP Notification)</label>
           <input type="email" id="c-email" required placeholder="your.email@example.com" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
         </div>
 
-        <!-- Available Dates Input -->
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Available Dates (Pick at least 1)</label>
           <div class="flex gap-2">
@@ -76,11 +65,10 @@
           <div id="date-tags" class="flex flex-wrap gap-2 mt-2"></div>
         </div>
 
-        <!-- Themes / Activities Input with Local Photos -->
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Date Themes (Title + Photo/Vibe)</label>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Date Themes (Topic + Crisp Photo)</label>
           <div class="space-y-2 p-3 bg-pink-50/50 rounded-2xl border border-pink-100">
-            <input type="text" id="theme-topic-input" placeholder="e.g. Cozy Ramen + Boba Date" class="w-full px-3.5 py-2 text-xs rounded-xl border border-pink-200 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400 transition" />
+            <input type="text" id="theme-topic-input" placeholder="e.g. Cozy Ramen Date" class="w-full px-3.5 py-2 text-xs rounded-xl border border-pink-200 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400 transition" />
             
             <div class="flex items-center gap-2">
               <input type="file" id="theme-pic-input" accept="image/*" class="text-[11px] text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-pink-200 file:text-pink-700 hover:file:bg-pink-300 cursor-pointer flex-1" />
@@ -91,11 +79,10 @@
         </div>
 
         <button type="submit" id="generate-btn" class="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 transition active:scale-95">
-          Generate Shareable Invite ✨
+          Generate Short Shareable Link ✨
         </button>
       </form>
 
-      <!-- Shareable Result -->
       <div id="link-result" class="hidden mt-5 p-4 bg-pink-50/70 rounded-2xl border border-pink-200">
         <p class="text-xs font-bold text-pink-700 mb-2">🎉 Your invite link is ready!</p>
         <div class="flex gap-2">
@@ -105,9 +92,7 @@
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 2: RECIPIENT STAGE 1 (Unavoidable YES)-->
-    <!-- ========================================== -->
+    <!-- VIEW 2: RECIPIENT STAGE 1 -->
     <div id="stage-1-view" class="hidden text-center py-6">
       <div class="inline-block p-4 bg-pink-100 rounded-full mb-3 animate-bounce">
         <span class="text-5xl">💌</span>
@@ -126,9 +111,7 @@
       <p id="tease-text" class="text-xs text-pink-400 mt-4 min-h-[1.25rem] font-bold font-cute"></p>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 3: RECIPIENT STAGE 2 (Pick Date/Theme)-->
-    <!-- ========================================== -->
+    <!-- VIEW 3: RECIPIENT STAGE 2 -->
     <div id="stage-2-view" class="hidden space-y-5">
       <div class="text-center">
         <span class="text-3xl">🌸</span>
@@ -136,7 +119,6 @@
         <p class="text-xs text-slate-500 font-medium">Step 1: Pick an available date from the calendar:</p>
       </div>
 
-      <!-- Calendar -->
       <div class="bg-pink-50/40 p-3.5 rounded-3xl border border-pink-100">
         <div class="flex items-center justify-between mb-3 px-1">
           <button type="button" onclick="changeMonth(-1)" class="w-8 h-8 rounded-full hover:bg-pink-100 text-slate-600 font-bold flex items-center justify-center transition">&larr;</button>
@@ -151,7 +133,6 @@
         <p class="text-[10px] text-pink-400 font-semibold mt-2.5 text-center">Highlighted dates are available!</p>
       </div>
 
-      <!-- Step 2: Themes -->
       <div id="themes-unlock-section" class="hidden pt-4 border-t-2 border-dashed border-pink-100">
         <label class="block text-xs font-bold text-slate-700 mb-1">Step 2: Pick your date vibe:</label>
         <p class="text-xs text-slate-400 mb-3">Selected Date: <span id="display-selected-date" class="font-extrabold text-pink-500"></span></p>
@@ -161,13 +142,11 @@
         <button onclick="finalizeRSVP()" id="lock-btn" disabled class="w-full mt-5 py-3.5 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 disabled:opacity-40 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 transition active:scale-95">
           Lock It In! 🔒
         </button>
-        <p id="sending-indicator" class="text-center text-xs text-pink-500 font-bold mt-2 hidden animate-pulse">Sending details to their inbox... 💌</p>
+        <p id="sending-indicator" class="text-center text-xs text-pink-500 font-bold mt-2 hidden animate-pulse">Sending confirmation email... 💌</p>
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 4: FINAL CONFIRMATION                 -->
-    <!-- ========================================== -->
+    <!-- VIEW 4: FINAL CONFIRMATION -->
     <div id="confirmed-view" class="hidden text-center py-6 space-y-4">
       <div class="inline-block p-4 bg-pink-100 rounded-full animate-float">
         <span class="text-5xl">🥂</span>
@@ -178,7 +157,7 @@
         <p><strong>Theme:</strong> <span id="final-theme" class="text-pink-600 font-extrabold"></span></p>
         <p id="email-sent-status" class="text-emerald-600 font-bold pt-1">✅ Details were sent directly to their email!</p>
       </div>
-      <div id="final-theme-image-container" class="rounded-2xl overflow-hidden shadow-sm max-h-48 flex justify-center bg-pink-50/50"></div>
+      <div id="final-theme-image-container" class="rounded-2xl overflow-hidden shadow-sm max-h-56 flex justify-center bg-pink-50/50"></div>
     </div>
 
   </div>
@@ -194,7 +173,6 @@
     let dodgeCount = 0;
     const teaseMessages = ["Nice try! 😉", "Are you sure? 🥺", "Wrong button! 🤭", "Nope! 💖", "Try again! 🙈"];
 
-    // Browser & Mobile cross-compatible Base64 encoder/decoder
     function toSafeBase64(str) {
       return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
         return String.fromCharCode('0x' + p1);
@@ -212,8 +190,6 @@
 
     function checkInvite() {
       let rawData = null;
-
-      // URL Hash Routing (#d=...) to bypass HTTP 414 Server limits
       if (window.location.hash && window.location.hash.includes("d=")) {
         rawData = window.location.hash.split("d=")[1];
       } else {
@@ -255,12 +231,13 @@
       `).join('');
     }
 
+    // High-clarity 320px downsampler (crisp on mobile, lightweight in payload)
     function addThemeItem() {
       const topicInput = document.getElementById("theme-topic-input");
       const picInput = document.getElementById("theme-pic-input");
       const title = topicInput.value.trim();
 
-      if (!title) return alert("Please enter a theme name/topic!");
+      if (!title) return alert("Please enter a theme name!");
 
       if (picInput.files && picInput.files[0]) {
         const reader = new FileReader();
@@ -268,8 +245,7 @@
           const img = new Image();
           img.onload = () => {
             const canvas = document.createElement("canvas");
-            // Compress down to 100px thumbnail to keep URL ultra-compact
-            const maxDim = 100;
+            const maxDim = 320;
             let width = img.width;
             let height = img.height;
             if (width > height) {
@@ -282,9 +258,10 @@
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext("2d");
+            ctx.imageSmoothingQuality = "high";
             ctx.drawImage(img, 0, 0, width, height);
 
-            const compressed = canvas.toDataURL("image/jpeg", 0.4);
+            const compressed = canvas.toDataURL("image/jpeg", 0.7);
             availableThemes.push({ title: title, img: compressed });
             renderThemeList();
             topicInput.value = "";
@@ -310,16 +287,21 @@
       document.getElementById("theme-list").innerHTML = availableThemes.map((t, i) => `
         <div class="relative bg-white border border-pink-100 rounded-2xl overflow-hidden flex flex-col items-center p-2 text-center shadow-sm">
           <button type="button" onclick="removeThemeItem(${i})" class="absolute top-1 right-1 bg-slate-900/60 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">&times;</button>
-          ${t.img ? `<img src="${t.img}" class="w-full h-16 object-cover rounded-xl mb-1" />` : `<div class="w-full h-16 bg-pink-50 flex items-center justify-center text-2xl rounded-xl mb-1">✨</div>`}
+          ${t.img ? `<img src="${t.img}" class="w-full h-20 object-cover rounded-xl mb-1" />` : `<div class="w-full h-20 bg-pink-50 flex items-center justify-center text-2xl rounded-xl mb-1">✨</div>`}
           <span class="text-xs font-bold text-slate-700 truncate w-full">${t.title}</span>
         </div>
       `).join('');
     }
 
-    function generateInviteLink(e) {
+    async function generateInviteLink(e) {
       e.preventDefault();
       if (availableDates.length === 0) return alert("Please pick at least one available date!");
       if (availableThemes.length === 0) return alert("Please add at least one theme!");
+
+      const btn = document.getElementById("generate-btn");
+      const originalText = btn.innerText;
+      btn.innerText = "Creating Short Link... ⏳";
+      btn.disabled = true;
 
       const payload = {
         c: document.getElementById("c-name").value.trim(),
@@ -332,8 +314,22 @@
       const b64 = toSafeBase64(JSON.stringify(payload));
       const fullURL = `${window.location.origin}${window.location.pathname}#d=${b64}`;
 
-      document.getElementById("generated-url").value = fullURL;
-      document.getElementById("link-result").classList.remove("hidden");
+      try {
+        // Is.gd public API provides CORS-enabled shortening for hash fragments
+        const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(fullURL)}`);
+        const data = await res.json();
+        if (data.shorturl) {
+          document.getElementById("generated-url").value = data.shorturl;
+        } else {
+          document.getElementById("generated-url").value = fullURL;
+        }
+      } catch (err) {
+        document.getElementById("generated-url").value = fullURL;
+      } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+        document.getElementById("link-result").classList.remove("hidden");
+      }
     }
 
     function copyInviteLink() {
@@ -433,7 +429,7 @@
         <div onclick="selectTheme(${idx})" 
           class="cursor-pointer border-2 rounded-2xl overflow-hidden transition-all p-2.5 text-center flex flex-col items-center bg-white 
           ${selectedThemeIndex === idx ? 'border-pink-500 ring-2 ring-pink-200 bg-pink-50/50 shadow-md' : 'border-slate-100 hover:border-pink-200'}">
-          ${theme.img ? `<img src="${theme.img}" class="w-full h-20 object-cover rounded-xl mb-2" />` : `<div class="w-full h-20 bg-pink-50 rounded-xl flex items-center justify-center text-2xl mb-2">✨</div>`}
+          ${theme.img ? `<img src="${theme.img}" class="w-full h-24 object-cover rounded-xl mb-2" />` : `<div class="w-full h-24 bg-pink-50 rounded-xl flex items-center justify-center text-3xl mb-2">✨</div>`}
           <span class="text-xs font-bold text-slate-800">${theme.title}</span>
         </div>
       `).join('');
@@ -488,7 +484,7 @@
 
       if (chosenTheme.img) {
         document.getElementById("final-theme-image-container").innerHTML = `
-          <img src="${chosenTheme.img}" class="max-h-48 w-full object-cover rounded-2xl" />
+          <img src="${chosenTheme.img}" class="max-h-56 w-full object-cover rounded-2xl" />
         `;
       }
     }
