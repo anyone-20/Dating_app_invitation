@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Date Invitation</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-amber-50 min-h-screen text-slate-800 flex items-center justify-center p-4">
+
+  <!-- Main App Shell -->
+  <div class="w-full max-w-lg bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border border-rose-100 p-6 md:p-8 relative">
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: CREATOR BUILDER                   -->
+    <!-- ========================================== -->
+    <div id="creator-view">
+      <div class="text-center mb-6">
+        <span class="text-4xl">💌</span>
+        <h1 class="text-2xl font-bold text-rose-600 mt-2">Create Date Invite</h1>
+        <p class="text-xs text-slate-500">Pick available dates, create themes with photos, and share!</p>
+      </div>
+
+      <form id="creator-form" class="space-y-5" onsubmit="generateInviteLink(event)">
+        <!-- Names -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Your Name</label>
+            <input type="text" id="c-name" required placeholder="Romeo" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Date's Name</label>
+            <input type="text" id="i-name" required placeholder="Juliet" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500" />
+          </div>
+        </div>
+
+        <!-- Dates Selection -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Your Available Dates (Pick at least 1)</label>
+          <div class="flex gap-2">
+            <input type="date" id="date-input" class="flex-1 px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500" />
+            <button type="button" onclick="addDateItem()" class="px-4 py-2 bg-rose-100 text-rose-700 font-bold rounded-xl text-sm hover:bg-rose-200 transition">+</button>
+          </div>
+          <div id="date-tags" class="flex flex-wrap gap-2 mt-2"></div>
+        </div>
+
+        <!-- Themes Selection with Pictures -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Date Themes (Title + Photo)</label>
+          <div class="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+            <input type="text" id="theme-topic-input" placeholder="Theme Topic (e.g. Cozy Ramen Date)" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500 bg-white" />
+            <div class="flex items-center gap-2">
+              <input type="file" id="theme-pic-input" accept="image/*" class="text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-100 file:text-rose-700 hover:file:bg-rose-200 cursor-pointer flex-1" />
+              <button type="button" onclick="addThemeItem()" class="px-4 py-1.5 bg-rose-500 text-white font-semibold rounded-xl text-xs hover:bg-rose-600 transition">Add Theme</button>
+            </div>
+          </div>
+          <div id="theme-list" class="grid grid-cols-2 gap-2 mt-3"></div>
+        </div>
+
+        <button type="submit" class="w-full mt-4 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-2xl shadow-md transition-transform active:scale-95">
+          Generate Shareable Link ✨
+        </button>
+      </form>
+
+      <!-- Generated Link Modal/Card -->
+      <div id="link-result" class="hidden mt-5 p-4 bg-rose-50 rounded-2xl border border-rose-200">
+        <p class="text-xs font-semibold text-rose-800 mb-2">🎉 Your invite link is ready!</p>
+        <div class="flex gap-2">
+          <input type="text" id="generated-url" readonly class="text-xs w-full bg-white p-2 rounded-lg border border-rose-200 text-slate-600" />
+          <button onclick="copyInviteLink()" id="copy-btn" class="px-3 py-1 bg-rose-500 text-white text-xs font-semibold rounded-lg hover:bg-rose-600">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: RECIPIENT STAGE 1 (Unavoidable YES)-->
+    <!-- ========================================== -->
+    <div id="stage-1-view" class="hidden text-center py-8">
+      <div class="text-5xl mb-4 animate-bounce">💖</div>
+      <h2 class="text-2xl font-bold text-slate-800" id="recipient-greeting">Hey there!</h2>
+      <p class="text-sm text-slate-600 mt-2 mb-10" id="recipient-question">Will you go on a date with me?</p>
+
+      <div class="relative h-32 flex items-center justify-center gap-6">
+        <button id="yes-btn" onclick="goToStage2()" class="px-8 py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-full shadow-lg shadow-rose-200 transition-transform active:scale-95">
+          YES 🥰
+        </button>
+
+        <button id="no-btn" onmouseover="dodgeNoButton()" onclick="dodgeNoButton()" class="px-6 py-3 bg-slate-200 text-slate-600 font-semibold rounded-full transition-all duration-150">
+          No 😢
+        </button>
+      </div>
+      <p id="tease-text" class="text-xs text-rose-400 mt-4 min-h-[1.25rem] font-medium"></p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: RECIPIENT STAGE 2 (Sequential)    -->
+    <!-- ========================================== -->
+    <div id="stage-2-view" class="hidden space-y-6">
+      <div class="text-center">
+        <span class="text-4xl">✨</span>
+        <h2 class="text-xl font-bold text-rose-600 mt-1">Yay! It's a Date!</h2>
+        <p class="text-xs text-slate-500">Pick an available date on the calendar first:</p>
+      </div>
+
+      <!-- STEP 1: Interactive Monthly Calendar -->
+      <div>
+        <div class="flex items-center justify-between mb-3 px-1">
+          <button type="button" onclick="changeMonth(-1)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-600 font-bold">&larr;</button>
+          <span id="calendar-month-year" class="text-sm font-bold text-slate-700"></span>
+          <button type="button" onclick="changeMonth(1)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-600 font-bold">&rarr;</button>
+        </div>
+
+        <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-slate-400 mb-1">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
+        <p class="text-[11px] text-slate-400 mt-2 text-center">Dates with pink circles are open for the date.</p>
+      </div>
+
+      <!-- STEP 2: Themes (Locked until date is selected) -->
+      <div id="themes-unlock-section" class="hidden transition-all duration-500 pt-4 border-t border-rose-100">
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Now pick your preferred vibe / theme:</label>
+        <p class="text-xs text-slate-400 mb-3">Selected Date: <span id="display-selected-date" class="font-bold text-rose-500"></span></p>
+        
+        <div id="recipient-themes-grid" class="grid grid-cols-2 gap-3"></div>
+
+        <button onclick="finalizeRSVP()" id="lock-btn" disabled class="w-full mt-5 py-3 bg-rose-500 hover:bg-rose-600 disabled:opacity-50 text-white font-semibold rounded-2xl shadow-md transition-transform active:scale-95">
+          Lock It In! 🔒
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 4: FINAL CONFIRMATION                 -->
+    <!-- ========================================== -->
+    <div id="confirmed-view" class="hidden text-center py-6 space-y-4">
+      <div class="text-5xl">🥂</div>
+      <h2 class="text-2xl font-bold text-rose-600">See You Then!</h2>
+      <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 text-left text-xs space-y-2 text-slate-700">
+        <p><strong>Date:</strong> <span id="final-date" class="text-rose-600 font-bold"></span></p>
+        <p><strong>Theme:</strong> <span id="final-theme" class="text-rose-600 font-bold"></span></p>
+      </div>
+      <div id="final-theme-image-container" class="rounded-xl overflow-hidden shadow-sm max-h-48 flex justify-center bg-slate-100"></div>
+      <p class="text-xs text-slate-500">Take a screenshot to let them know it's official!</p>
+    </div>
+
+  </div>
+
+  <script>
+    // State
+    let availableDates = [];
+    let availableThemes = []; // array of { title, img }
+    let currentPayload = null;
+
+    // Calendar state
+    let calCurrentDate = new Date();
+    let selectedDate = null;
+    let selectedThemeIndex = null;
+
+    let dodgeCount = 0;
+    const teaseMessages = [
+      "Nice try! 😉",
+      "Are you sure? Try again! 🥺",
+      "That button is broken, click YES! 🤭",
+      "Nope, not an option! 💖"
+    ];
+
+    window.onload = () => {
+      renderDateTags();
+      renderThemeList();
+      checkURLParams();
+    };
+
+    // --- BUILDER: DATES ---
+    function addDateItem() {
+      const input = document.getElementById("date-input");
+      if (input.value && !availableDates.includes(input.value)) {
+        availableDates.push(input.value);
+        renderDateTags();
+        input.value = "";
+      }
+    }
+
+    function removeDateItem(idx) {
+      availableDates.splice(idx, 1);
+      renderDateTags();
+    }
+
+    function renderDateTags() {
+      const container = document.getElementById("date-tags");
+      container.innerHTML = availableDates.map((d, i) => `
+        <span class="inline-flex items-center gap-1 bg-rose-100 text-rose-700 px-2 py-1 rounded-lg text-xs font-medium">
+          ${d} <button type="button" onclick="removeDateItem(${i})" class="font-bold hover:text-rose-900">&times;</button>
+        </span>
+      `).join('');
+    }
+
+    // --- BUILDER: THEMES & COMPRESSED PIC UPLOAD ---
+    function addThemeItem() {
+      const topicInput = document.getElementById("theme-topic-input");
+      const picInput = document.getElementById("theme-pic-input");
+      const title = topicInput.value.trim();
+
+      if (!title) {
+        alert("Please enter a theme topic!");
+        return;
+      }
+
+      if (picInput.files && picInput.files[0]) {
+        // Compress image using canvas so the URL stays compact
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const maxDim = 250; // thumbnail size
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height && width > maxDim) {
+              height *= maxDim / width;
+              width = maxDim;
+            } else if (height > maxDim) {
+              width *= maxDim / height;
+              height = maxDim;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.6);
+            availableThemes.push({ title, img: compressedDataUrl });
+            renderThemeList();
+            topicInput.value = "";
+            picInput.value = "";
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(picInput.files[0]);
+      } else {
+        // Theme with fallback icon picture
+        availableThemes.push({ title, img: null });
+        renderThemeList();
+        topicInput.value = "";
+        picInput.value = "";
+      }
+    }
+
+    function removeThemeItem(idx) {
+      availableThemes.splice(idx, 1);
+      renderThemeList();
+    }
+
+    function renderThemeList() {
+      const container = document.getElementById("theme-list");
+      container.innerHTML = availableThemes.map((t, i) => `
+        <div class="relative bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col items-center p-2 text-center shadow-sm">
+          <button type="button" onclick="removeThemeItem(${i})" class="absolute top-1 right-1 bg-slate-900/60 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">&times;</button>
+          ${t.img ? `<img src="${t.img}" class="w-full h-20 object-cover rounded-lg mb-1" />` : `<div class="w-full h-20 bg-rose-50 flex items-center justify-center text-2xl rounded-lg mb-1">✨</div>`}
+          <span class="text-xs font-semibold text-slate-700 truncate w-full">${t.title}</span>
+        </div>
+      `).join('');
+    }
+
+    // --- SHAREABLE LINK ENCODING ---
+    function generateInviteLink(e) {
+      e.preventDefault();
+      if (availableDates.length === 0) {
+        alert("Please add at least one available date!");
+        return;
+      }
+      if (availableThemes.length === 0) {
+        alert("Please add at least one theme!");
+        return;
+      }
+
+      const payload = {
+        c: document.getElementById("c-name").value,
+        i: document.getElementById("i-name").value,
+        d: availableDates,
+        t: availableThemes
+      };
+
+      const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+      const fullURL = `${window.location.origin}${window.location.pathname}?invite=${encoded}`;
+
+      document.getElementById("generated-url").value = fullURL;
+      document.getElementById("link-result").classList.remove("hidden");
+    }
+
+    function copyInviteLink() {
+      const copyInput = document.getElementById("generated-url");
+      copyInput.select();
+      navigator.clipboard.writeText(copyInput.value);
+      const btn = document.getElementById("copy-btn");
+      btn.innerText = "Copied!";
+      setTimeout(() => (btn.innerText = "Copy"), 2000);
+    }
+
+    // --- RECIPIENT DETECTION ---
+    function checkURLParams() {
+      const params = new URLSearchParams(window.location.search);
+      const inviteData = params.get("invite");
+
+      if (inviteData) {
+        try {
+          currentPayload = JSON.parse(decodeURIComponent(atob(inviteData)));
+          showStage1(currentPayload);
+        } catch (err) {
+          console.error("Invalid invite payload", err);
+        }
+      }
+    }
+
+    function showStage1(data) {
+      document.getElementById("creator-view").classList.add("hidden");
+      document.getElementById("stage-1-view").classList.remove("hidden");
+      
+      document.getElementById("recipient-greeting").innerText = `Hey ${data.i}! 👋`;
+      document.getElementById("recipient-question").innerText = `${data.c} has invited you on a date!`;
+    }
+
+    // --- STAGE 1: DODGE BUTTON ---
+    function dodgeNoButton() {
+      const noBtn = document.getElementById("no-btn");
+      const yesBtn = document.getElementById("yes-btn");
+      const tease = document.getElementById("tease-text");
+
+      const randomX = Math.floor(Math.random() * 200) - 100;
+      const randomY = Math.floor(Math.random() * 100) - 50;
+
+      noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+      dodgeCount++;
+      const currentScale = 1 + dodgeCount * 0.12;
+      yesBtn.style.transform = `scale(${currentScale})`;
+
+      tease.innerText = teaseMessages[dodgeCount % teaseMessages.length];
+    }
+
+    function goToStage2() {
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      
+      setTimeout(() => {
+        document.getElementById("stage-1-view").classList.add("hidden");
+        document.getElementById("stage-2-view").classList.remove("hidden");
+
+        // Initialize calendar to the month of the first available date
+        if (currentPayload.d && currentPayload.d.length > 0) {
+          calCurrentDate = new Date(currentPayload.d[0] + "T00:00:00");
+        }
+        renderCalendar();
+      }, 400);
+    }
+
+    // --- STAGE 2: CALENDAR RENDERING ---
+    function changeMonth(offset) {
+      calCurrentDate.setMonth(calCurrentDate.getMonth() + offset);
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const year = calCurrentDate.getFullYear();
+      const month = calCurrentDate.getMonth();
+
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      document.getElementById("calendar-month-year").innerText = `${monthNames[month]} ${year}`;
+
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      const grid = document.getElementById("calendar-grid");
+      grid.innerHTML = "";
+
+      // Blank prefix cells
+      for (let i = 0; i < firstDayIndex; i++) {
+        grid.innerHTML += `<div class="h-10"></div>`;
+      }
+
+      // Day cells
+      for (let d = 1; d <= totalDays; d++) {
+        const monthStr = String(month + 1).padStart(2, '0');
+        const dayStr = String(d).padStart(2, '0');
+        const isoDate = `${year}-${monthStr}-${dayStr}`;
+
+        const isAvailable = currentPayload.d.includes(isoDate);
+        const isSelected = selectedDate === isoDate;
+
+        if (isAvailable) {
+          grid.innerHTML += `
+            <button type="button" onclick="selectCalendarDate('${isoDate}')" 
+              class="h-10 text-xs font-semibold rounded-xl flex items-center justify-center transition-all 
+              ${isSelected ? 'bg-rose-500 text-white shadow-md' : 'bg-rose-100 text-rose-700 hover:bg-rose-200 ring-2 ring-rose-300'}">
+              ${d}
+            </button>
+          `;
+        } else {
+          grid.innerHTML += `
+            <div class="h-10 text-xs text-slate-300 flex items-center justify-center cursor-not-allowed">
+              ${d}
+            </div>
+          `;
+        }
+      }
+    }
+
+    // --- SEQUENTIAL LOGIC: UNLOCK THEMES AFTER DATE SELECTION ---
+    function selectCalendarDate(date) {
+      selectedDate = date;
+      renderCalendar();
+
+      // Show and populate theme section
+      document.getElementById("display-selected-date").innerText = date;
+      const themeSection = document.getElementById("themes-unlock-section");
+      themeSection.classList.remove("hidden");
+
+      renderRecipientThemes();
+    }
+
+    function renderRecipientThemes() {
+      const container = document.getElementById("recipient-themes-grid");
+      container.innerHTML = currentPayload.t.map((theme, idx) => `
+        <div onclick="selectTheme(${idx})" 
+          class="cursor-pointer border-2 rounded-2xl overflow-hidden transition-all p-2 text-center flex flex-col items-center bg-white 
+          ${selectedThemeIndex === idx ? 'border-rose-500 ring-2 ring-rose-200 bg-rose-50/50 shadow' : 'border-slate-200 hover:border-rose-200'}">
+          ${theme.img ? `<img src="${theme.img}" class="w-full h-24 object-cover rounded-xl mb-2" />` : `<div class="w-full h-24 bg-rose-50 rounded-xl flex items-center justify-center text-3xl mb-2">✨</div>`}
+          <span class="text-xs font-bold text-slate-800">${theme.title}</span>
+        </div>
+      `).join('');
+    }
+
+    function selectTheme(idx) {
+      selectedThemeIndex = idx;
+      renderRecipientThemes();
+      document.getElementById("lock-btn").removeAttribute("disabled");
+    }
+
+    function finalizeRSVP() {
+      if (!selectedDate || selectedThemeIndex === null) return;
+
+      const chosenTheme = currentPayload.t[selectedThemeIndex];
+
+      confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+
+      document.getElementById("stage-2-view").classList.add("hidden");
+      document.getElementById("confirmed-view").classList.remove("hidden");
+
+      document.getElementById("final-date").innerText = selectedDate;
+      document.getElementById("final-theme").innerText = chosenTheme.title;
+
+      if (chosenTheme.img) {
+        document.getElementById("final-theme-image-container").innerHTML = `
+          <img src="${chosenTheme.img}" class="max-h-48 w-full object-cover" />
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
