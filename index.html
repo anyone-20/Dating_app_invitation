@@ -11,14 +11,12 @@
 
   <div class="w-full max-w-lg bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border border-rose-100 p-6 md:p-8 relative">
 
-    <!-- ========================================== -->
-    <!-- VIEW 1: CREATOR (Only shows when NO invite) -->
-    <!-- ========================================== -->
+    <!-- VIEW 1: CREATOR -->
     <div id="creator-view">
       <div class="text-center mb-6">
         <span class="text-4xl">💌</span>
         <h1 class="text-2xl font-bold text-rose-600 mt-2">Create Date Invite</h1>
-        <p class="text-xs text-slate-500">Pick available dates, add themes with pictures, and share!</p>
+        <p class="text-xs text-slate-500">Pick available dates, add themes with photos, and share!</p>
       </div>
 
       <form id="creator-form" class="space-y-4" onsubmit="generateInviteLink(event)">
@@ -68,9 +66,7 @@
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 2: RECIPIENT STAGE 1                  -->
-    <!-- ========================================== -->
+    <!-- VIEW 2: RECIPIENT STAGE 1 -->
     <div id="stage-1-view" class="hidden text-center py-8">
       <div class="text-5xl mb-4 animate-bounce">💖</div>
       <h2 class="text-2xl font-bold text-slate-800" id="recipient-greeting">Hey there!</h2>
@@ -87,9 +83,7 @@
       <p id="tease-text" class="text-xs text-rose-400 mt-4 min-h-[1.25rem] font-medium"></p>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 3: RECIPIENT STAGE 2 (Calendar + Pick)-->
-    <!-- ========================================== -->
+    <!-- VIEW 3: RECIPIENT STAGE 2 -->
     <div id="stage-2-view" class="hidden space-y-6">
       <div class="text-center">
         <span class="text-4xl">✨</span>
@@ -123,9 +117,7 @@
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 4: FINAL CONFIRMATION                 -->
-    <!-- ========================================== -->
+    <!-- VIEW 4: FINAL CONFIRMATION -->
     <div id="confirmed-view" class="hidden text-center py-6 space-y-4">
       <div class="text-5xl">🥂</div>
       <h2 class="text-2xl font-bold text-rose-600">See You Then!</h2>
@@ -142,19 +134,16 @@
     let availableDates = [];
     let availableThemes = [];
     let currentPayload = null;
-
     let calCurrentDate = new Date();
     let selectedDate = null;
     let selectedThemeIndex = null;
     let dodgeCount = 0;
     const teaseMessages = ["Nice try! 😉", "Are you sure? 🥺", "Wrong button! 🤭", "Nope! 💖"];
 
-    // Initialize checking hash directly
     window.addEventListener("DOMContentLoaded", checkInvite);
     window.addEventListener("hashchange", checkInvite);
 
     function checkInvite() {
-      // Look for hash first (#data=...), fallback to query (?invite=...)
       let encodedData = null;
       if (window.location.hash.includes("#data=")) {
         encodedData = window.location.hash.replace("#data=", "");
@@ -212,7 +201,6 @@
           const img = new Image();
           img.onload = () => {
             const canvas = document.createElement("canvas");
-            // Downscale to 80px micro thumbnail to keep link short
             const maxDim = 80;
             let width = img.width;
             let height = img.height;
@@ -272,7 +260,6 @@
         t: availableThemes
       };
 
-      // Base64 encode into URL Hash (#data=...)
       const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
       const fullURL = `${window.location.origin}${window.location.pathname}#data=${encodeURIComponent(b64)}`;
 
