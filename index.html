@@ -3,130 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Date Invitation</title>
+  <title>A Special Invitation for You ✨</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-</head>
-<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-amber-50 min-h-screen text-slate-800 flex items-center justify-center p-4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Shantell+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-  <div class="w-full max-w-lg bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border border-rose-100 p-6 md:p-8 relative">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-cute {
+      font-family: 'Shantell Sans', cursive;
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+    .animate-float {
+      animation: floatSlow 3.5s ease-in-out infinite;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 45px -15px rgba(244, 114, 182, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-tr from-rose-100 via-pink-50 to-amber-100 min-h-screen text-slate-700 flex items-center justify-center p-4 selection:bg-rose-200">
+
+  <div class="w-full max-w-md glass-card rounded-[2.5rem] border-2 border-white/80 p-6 md:p-8 relative overflow-hidden transition-all duration-300">
 
     <!-- ========================================== -->
-    <!-- VIEW 1: CREATOR BUILDER                   -->
+    <!-- VIEW 1: CREATOR (Setup Invitation)         -->
     <!-- ========================================== -->
     <div id="creator-view">
       <div class="text-center mb-6">
-        <span class="text-4xl">💌</span>
-        <h1 class="text-2xl font-bold text-rose-600 mt-2">Create Date Invite</h1>
-        <p class="text-xs text-slate-500">Pick available dates, add themes, and get RSVP email alerts!</p>
+        <div class="inline-block p-3 bg-pink-100 rounded-3xl mb-2 animate-float">
+          <span class="text-4xl">💌</span>
+        </div>
+        <h1 class="text-2xl font-extrabold text-pink-600 font-cute tracking-tight">Plan a Date Invitation</h1>
+        <p class="text-xs text-slate-500 font-medium mt-1">Set your available days, pick cute ideas, & get RSVP alerts!</p>
       </div>
 
       <form id="creator-form" class="space-y-4" onsubmit="generateInviteLink(event)">
+        <!-- Name Inputs -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Your Name</label>
-            <input type="text" id="c-name" required placeholder="Romeo" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500" />
+            <label class="block text-xs font-bold text-slate-600 mb-1">Your Name</label>
+            <input type="text" id="c-name" required placeholder="Romeo" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Date's Name</label>
-            <input type="text" id="i-name" required placeholder="Juliet" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500" />
+            <label class="block text-xs font-bold text-slate-600 mb-1">Date's Name</label>
+            <input type="text" id="i-name" required placeholder="Juliet" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
           </div>
         </div>
 
+        <!-- Creator's Notification Email -->
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Your Email (To receive final RSVP choice)</label>
-          <input type="email" id="c-email" required placeholder="your.email@example.com" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500" />
+          <label class="block text-xs font-bold text-slate-600 mb-1">Your Email (To receive their RSVP)</label>
+          <input type="email" id="c-email" required placeholder="your.email@example.com" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
         </div>
 
+        <!-- Available Dates Input -->
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Your Available Dates (Pick at least 1)</label>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Available Dates (Pick at least 1)</label>
           <div class="flex gap-2">
-            <input type="date" id="date-input" class="flex-1 px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500" />
-            <button type="button" onclick="addDateItem()" class="px-4 py-2 bg-rose-100 text-rose-700 font-bold rounded-xl text-sm hover:bg-rose-200 transition">+</button>
+            <input type="date" id="date-input" class="flex-1 px-3.5 py-2 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
+            <button type="button" onclick="addDateItem()" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-2xl text-base shadow-sm transition active:scale-95">+</button>
           </div>
           <div id="date-tags" class="flex flex-wrap gap-2 mt-2"></div>
         </div>
 
+        <!-- Themes / Activities Input with Local Photos -->
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Date Themes (Topic + Optional Image Link)</label>
-          <div class="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
-            <input type="text" id="theme-topic-input" placeholder="e.g. Cozy Ramen Date" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500 bg-white" />
-            <div class="flex gap-2">
-              <input type="url" id="theme-pic-input" placeholder="Paste image link (optional)" class="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-rose-500 bg-white" />
-              <button type="button" onclick="addThemeItem()" class="px-4 py-2 bg-rose-500 text-white font-semibold rounded-xl text-xs hover:bg-rose-600 transition">Add</button>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Date Themes (Title + Photo/Vibe)</label>
+          <div class="space-y-2 p-3 bg-pink-50/50 rounded-2xl border border-pink-100">
+            <input type="text" id="theme-topic-input" placeholder="e.g. Cozy Ramen + Boba Date" class="w-full px-3.5 py-2 text-xs rounded-xl border border-pink-200 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400 transition" />
+            
+            <div class="flex items-center gap-2">
+              <input type="file" id="theme-pic-input" accept="image/*" class="text-[11px] text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-pink-200 file:text-pink-700 hover:file:bg-pink-300 cursor-pointer flex-1" />
+              <button type="button" onclick="addThemeItem()" class="px-4 py-1.5 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-xs shadow-sm transition active:scale-95">Add</button>
             </div>
-            <p class="text-[11px] text-slate-400">Leave image link empty for a default sticker.</p>
           </div>
-          <div id="theme-list" class="grid grid-cols-2 gap-2 mt-3"></div>
+          <div id="theme-list" class="grid grid-cols-2 gap-2 mt-2.5"></div>
         </div>
 
-        <button type="submit" class="w-full mt-4 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-2xl shadow-md transition-transform active:scale-95">
-          Generate Shareable Link ✨
+        <button type="submit" id="generate-btn" class="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 transition active:scale-95">
+          Generate Shareable Invite ✨
         </button>
       </form>
 
-      <div id="link-result" class="hidden mt-5 p-4 bg-rose-50 rounded-2xl border border-rose-200">
-        <p class="text-xs font-semibold text-rose-800 mb-2">🎉 Your invite link is ready!</p>
+      <!-- Shareable Result -->
+      <div id="link-result" class="hidden mt-5 p-4 bg-pink-50/70 rounded-2xl border border-pink-200">
+        <p class="text-xs font-bold text-pink-700 mb-2">🎉 Your invite link is ready!</p>
         <div class="flex gap-2">
-          <input type="text" id="generated-url" readonly class="text-xs w-full bg-white p-2 rounded-lg border border-rose-200 text-slate-600 select-all" />
-          <button onclick="copyInviteLink()" id="copy-btn" class="px-3 py-1 bg-rose-500 text-white text-xs font-semibold rounded-lg hover:bg-rose-600">Copy</button>
+          <input type="text" id="generated-url" readonly class="text-xs w-full bg-white p-2.5 rounded-xl border border-pink-200 text-slate-600 select-all focus:outline-none" />
+          <button onclick="copyInviteLink()" id="copy-btn" class="px-4 py-1 bg-pink-500 text-white text-xs font-bold rounded-xl hover:bg-pink-600 transition active:scale-95">Copy</button>
         </div>
       </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- VIEW 2: RECIPIENT STAGE 1 (Cannot say NO)  -->
+    <!-- VIEW 2: RECIPIENT STAGE 1 (Unavoidable YES)-->
     <!-- ========================================== -->
-    <div id="stage-1-view" class="hidden text-center py-8">
-      <div class="text-5xl mb-4 animate-bounce">💖</div>
-      <h2 class="text-2xl font-bold text-slate-800" id="recipient-greeting">Hey there!</h2>
-      <p class="text-sm text-slate-600 mt-2 mb-10" id="recipient-question">Will you go on a date with me?</p>
+    <div id="stage-1-view" class="hidden text-center py-6">
+      <div class="inline-block p-4 bg-pink-100 rounded-full mb-3 animate-bounce">
+        <span class="text-5xl">💌</span>
+      </div>
+      <h2 class="text-2xl font-extrabold text-pink-600 font-cute tracking-tight" id="recipient-greeting">Hey there!</h2>
+      <p class="text-sm font-semibold text-slate-600 mt-2 mb-10" id="recipient-question">Will you go on a date with me?</p>
 
-      <div class="relative h-32 flex items-center justify-center gap-6">
-        <button id="yes-btn" onclick="goToStage2()" class="px-8 py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-full shadow-lg shadow-rose-200 transition-transform active:scale-95">
+      <div class="relative h-32 flex items-center justify-center gap-5">
+        <button id="yes-btn" onclick="goToStage2()" class="px-8 py-3.5 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 text-white font-extrabold rounded-full shadow-lg shadow-pink-200 transition-transform active:scale-95">
           YES 🥰
         </button>
-        <button id="no-btn" onmouseover="dodgeNoButton()" ontouchstart="dodgeNoButton()" onclick="dodgeNoButton()" class="px-6 py-3 bg-slate-200 text-slate-600 font-semibold rounded-full transition-all duration-150">
+        <button id="no-btn" onmouseover="dodgeNoButton()" ontouchstart="dodgeNoButton()" onclick="dodgeNoButton()" class="px-6 py-3 bg-slate-200 text-slate-600 font-bold rounded-full transition-all duration-150">
           No 😢
         </button>
       </div>
-      <p id="tease-text" class="text-xs text-rose-400 mt-4 min-h-[1.25rem] font-medium"></p>
+      <p id="tease-text" class="text-xs text-pink-400 mt-4 min-h-[1.25rem] font-bold font-cute"></p>
     </div>
 
     <!-- ========================================== -->
-    <!-- VIEW 3: RECIPIENT STAGE 2 (Calendar First) -->
+    <!-- VIEW 3: RECIPIENT STAGE 2 (Pick Date/Theme)-->
     <!-- ========================================== -->
-    <div id="stage-2-view" class="hidden space-y-6">
+    <div id="stage-2-view" class="hidden space-y-5">
       <div class="text-center">
-        <span class="text-4xl">✨</span>
-        <h2 class="text-xl font-bold text-rose-600 mt-1">Yay! It's a Date!</h2>
-        <p class="text-xs text-slate-500">Step 1: Pick an available date from the calendar:</p>
+        <span class="text-3xl">🌸</span>
+        <h2 class="text-xl font-bold text-pink-600 font-cute mt-1">Yay! It's a Date!</h2>
+        <p class="text-xs text-slate-500 font-medium">Step 1: Pick an available date from the calendar:</p>
       </div>
 
-      <div>
+      <!-- Calendar -->
+      <div class="bg-pink-50/40 p-3.5 rounded-3xl border border-pink-100">
         <div class="flex items-center justify-between mb-3 px-1">
-          <button type="button" onclick="changeMonth(-1)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-600 font-bold">&larr;</button>
-          <span id="calendar-month-year" class="text-sm font-bold text-slate-700"></span>
-          <button type="button" onclick="changeMonth(1)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-600 font-bold">&rarr;</button>
+          <button type="button" onclick="changeMonth(-1)" class="w-8 h-8 rounded-full hover:bg-pink-100 text-slate-600 font-bold flex items-center justify-center transition">&larr;</button>
+          <span id="calendar-month-year" class="text-sm font-extrabold text-slate-700"></span>
+          <button type="button" onclick="changeMonth(1)" class="w-8 h-8 rounded-full hover:bg-pink-100 text-slate-600 font-bold flex items-center justify-center transition">&rarr;</button>
         </div>
 
-        <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-slate-400 mb-1">
+        <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-slate-400 mb-1">
           <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
         </div>
-        <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
-        <p class="text-[11px] text-slate-400 mt-2 text-center">Highlighted pink circles are available dates.</p>
+        <div id="calendar-grid" class="grid grid-cols-7 gap-1.5"></div>
+        <p class="text-[10px] text-pink-400 font-semibold mt-2.5 text-center">Highlighted dates are available!</p>
       </div>
 
-      <div id="themes-unlock-section" class="hidden pt-4 border-t border-rose-100">
-        <label class="block text-xs font-semibold text-slate-700 mb-1">Step 2: Pick your date vibe:</label>
-        <p class="text-xs text-slate-400 mb-3">Selected Date: <span id="display-selected-date" class="font-bold text-rose-500"></span></p>
+      <!-- Step 2: Themes -->
+      <div id="themes-unlock-section" class="hidden pt-4 border-t-2 border-dashed border-pink-100">
+        <label class="block text-xs font-bold text-slate-700 mb-1">Step 2: Pick your date vibe:</label>
+        <p class="text-xs text-slate-400 mb-3">Selected Date: <span id="display-selected-date" class="font-extrabold text-pink-500"></span></p>
         
         <div id="recipient-themes-grid" class="grid grid-cols-2 gap-3"></div>
 
-        <button onclick="finalizeRSVP()" id="lock-btn" disabled class="w-full mt-5 py-3 bg-rose-500 hover:bg-rose-600 disabled:opacity-50 text-white font-semibold rounded-2xl shadow-md transition-transform active:scale-95">
+        <button onclick="finalizeRSVP()" id="lock-btn" disabled class="w-full mt-5 py-3.5 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 disabled:opacity-40 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 transition active:scale-95">
           Lock It In! 🔒
         </button>
-        <p id="sending-indicator" class="text-center text-xs text-slate-400 mt-2 hidden">Sending confirmation email... 💌</p>
+        <p id="sending-indicator" class="text-center text-xs text-pink-500 font-bold mt-2 hidden animate-pulse">Sending details to their inbox... 💌</p>
       </div>
     </div>
 
@@ -134,14 +169,16 @@
     <!-- VIEW 4: FINAL CONFIRMATION                 -->
     <!-- ========================================== -->
     <div id="confirmed-view" class="hidden text-center py-6 space-y-4">
-      <div class="text-5xl">🥂</div>
-      <h2 class="text-2xl font-bold text-rose-600">See You Then!</h2>
-      <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 text-left text-xs space-y-2 text-slate-700">
-        <p><strong>Date:</strong> <span id="final-date" class="text-rose-600 font-bold"></span></p>
-        <p><strong>Theme:</strong> <span id="final-theme" class="text-rose-600 font-bold"></span></p>
-        <p id="email-sent-status" class="text-green-600 font-semibold pt-1">✅ Details were sent directly to their email!</p>
+      <div class="inline-block p-4 bg-pink-100 rounded-full animate-float">
+        <span class="text-5xl">🥂</span>
       </div>
-      <div id="final-theme-image-container" class="rounded-xl overflow-hidden shadow-sm max-h-48 flex justify-center bg-slate-100"></div>
+      <h2 class="text-2xl font-extrabold text-pink-600 font-cute">See You Then!</h2>
+      <div class="bg-pink-50/60 p-4 rounded-3xl border border-pink-100 text-left text-xs space-y-2.5 text-slate-700">
+        <p><strong>Date:</strong> <span id="final-date" class="text-pink-600 font-extrabold"></span></p>
+        <p><strong>Theme:</strong> <span id="final-theme" class="text-pink-600 font-extrabold"></span></p>
+        <p id="email-sent-status" class="text-emerald-600 font-bold pt-1">✅ Details were sent directly to their email!</p>
+      </div>
+      <div id="final-theme-image-container" class="rounded-2xl overflow-hidden shadow-sm max-h-48 flex justify-center bg-pink-50/50"></div>
     </div>
 
   </div>
@@ -155,9 +192,9 @@
     let selectedDate = null;
     let selectedThemeIndex = null;
     let dodgeCount = 0;
-    const teaseMessages = ["Nice try! 😉", "Are you sure? 🥺", "Wrong button! 🤭", "Nope! 💖"];
+    const teaseMessages = ["Nice try! 😉", "Are you sure? 🥺", "Wrong button! 🤭", "Nope! 💖", "Try again! 🙈"];
 
-    // Mobile & Cross-Browser Safe Base64 Helpers
+    // Browser & Mobile cross-compatible Base64 encoder/decoder
     function toSafeBase64(str) {
       return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
         return String.fromCharCode('0x' + p1);
@@ -176,7 +213,7 @@
     function checkInvite() {
       let rawData = null;
 
-      // Hash parameter check (avoids HTTP 414 URI Too Long errors)
+      // URL Hash Routing (#d=...) to bypass HTTP 414 Server limits
       if (window.location.hash && window.location.hash.includes("d=")) {
         rawData = window.location.hash.split("d=")[1];
       } else {
@@ -191,7 +228,7 @@
           currentPayload = JSON.parse(jsonStr);
           showStage1(currentPayload);
         } catch (err) {
-          console.error("Link decode error:", err);
+          console.error("Invite decode error:", err);
         }
       }
     }
@@ -212,8 +249,8 @@
 
     function renderDateTags() {
       document.getElementById("date-tags").innerHTML = availableDates.map((d, i) => `
-        <span class="inline-flex items-center gap-1 bg-rose-100 text-rose-700 px-2 py-1 rounded-lg text-xs font-medium">
-          ${d} <button type="button" onclick="removeDateItem(${i})" class="font-bold hover:text-rose-900">&times;</button>
+        <span class="inline-flex items-center gap-1.5 bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+          ${d} <button type="button" onclick="removeDateItem(${i})" class="hover:text-pink-900">&times;</button>
         </span>
       `).join('');
     }
@@ -223,16 +260,45 @@
       const picInput = document.getElementById("theme-pic-input");
       const title = topicInput.value.trim();
 
-      if (!title) return alert("Please enter a theme topic!");
+      if (!title) return alert("Please enter a theme name/topic!");
 
-      availableThemes.push({
-        title: title,
-        img: picInput.value.trim() || null
-      });
+      if (picInput.files && picInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            // Compress down to 100px thumbnail to keep URL ultra-compact
+            const maxDim = 100;
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
 
-      renderThemeList();
-      topicInput.value = "";
-      picInput.value = "";
+            const compressed = canvas.toDataURL("image/jpeg", 0.4);
+            availableThemes.push({ title: title, img: compressed });
+            renderThemeList();
+            topicInput.value = "";
+            picInput.value = "";
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(picInput.files[0]);
+      } else {
+        availableThemes.push({ title: title, img: null });
+        renderThemeList();
+        topicInput.value = "";
+        picInput.value = "";
+      }
     }
 
     function removeThemeItem(idx) {
@@ -242,10 +308,10 @@
 
     function renderThemeList() {
       document.getElementById("theme-list").innerHTML = availableThemes.map((t, i) => `
-        <div class="relative bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col items-center p-2 text-center shadow-sm">
+        <div class="relative bg-white border border-pink-100 rounded-2xl overflow-hidden flex flex-col items-center p-2 text-center shadow-sm">
           <button type="button" onclick="removeThemeItem(${i})" class="absolute top-1 right-1 bg-slate-900/60 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">&times;</button>
-          ${t.img ? `<img src="${t.img}" class="w-full h-16 object-cover rounded-lg mb-1" onerror="this.style.display='none'" />` : `<div class="w-full h-16 bg-rose-50 flex items-center justify-center text-2xl rounded-lg mb-1">✨</div>`}
-          <span class="text-xs font-semibold text-slate-700 truncate w-full">${t.title}</span>
+          ${t.img ? `<img src="${t.img}" class="w-full h-16 object-cover rounded-xl mb-1" />` : `<div class="w-full h-16 bg-pink-50 flex items-center justify-center text-2xl rounded-xl mb-1">✨</div>`}
+          <span class="text-xs font-bold text-slate-700 truncate w-full">${t.title}</span>
         </div>
       `).join('');
     }
@@ -264,7 +330,6 @@
       };
 
       const b64 = toSafeBase64(JSON.stringify(payload));
-      // Using #d= instead of ?d= eliminates server-side 414 URI Too Long limits
       const fullURL = `${window.location.origin}${window.location.pathname}#d=${b64}`;
 
       document.getElementById("generated-url").value = fullURL;
@@ -302,7 +367,7 @@
     }
 
     function goToStage2() {
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
       setTimeout(() => {
         document.getElementById("stage-1-view").classList.add("hidden");
         document.getElementById("stage-2-view").classList.remove("hidden");
@@ -330,7 +395,7 @@
       const grid = document.getElementById("calendar-grid");
       grid.innerHTML = "";
 
-      for (let i = 0; i < firstDayIndex; i++) grid.innerHTML += `<div class="h-10"></div>`;
+      for (let i = 0; i < firstDayIndex; i++) grid.innerHTML += `<div class="h-9"></div>`;
 
       for (let d = 1; d <= totalDays; d++) {
         const monthStr = String(month + 1).padStart(2, '0');
@@ -343,13 +408,13 @@
         if (isAvailable) {
           grid.innerHTML += `
             <button type="button" onclick="selectCalendarDate('${isoDate}')" 
-              class="h-10 text-xs font-semibold rounded-xl flex items-center justify-center transition-all 
-              ${isSelected ? 'bg-rose-500 text-white shadow-md' : 'bg-rose-100 text-rose-700 hover:bg-rose-200 ring-2 ring-rose-300'}">
+              class="h-9 text-xs font-bold rounded-2xl flex items-center justify-center transition-all 
+              ${isSelected ? 'bg-pink-500 text-white shadow-md shadow-pink-200' : 'bg-pink-100 text-pink-700 hover:bg-pink-200 ring-2 ring-pink-300'}">
               ${d}
             </button>
           `;
         } else {
-          grid.innerHTML += `<div class="h-10 text-xs text-slate-300 flex items-center justify-center">${d}</div>`;
+          grid.innerHTML += `<div class="h-9 text-xs text-slate-300 font-medium flex items-center justify-center">${d}</div>`;
         }
       }
     }
@@ -366,9 +431,9 @@
       const container = document.getElementById("recipient-themes-grid");
       container.innerHTML = currentPayload.t.map((theme, idx) => `
         <div onclick="selectTheme(${idx})" 
-          class="cursor-pointer border-2 rounded-2xl overflow-hidden transition-all p-2 text-center flex flex-col items-center bg-white 
-          ${selectedThemeIndex === idx ? 'border-rose-500 ring-2 ring-rose-200 bg-rose-50/50 shadow' : 'border-slate-200 hover:border-rose-200'}">
-          ${theme.img ? `<img src="${theme.img}" class="w-full h-20 object-cover rounded-xl mb-2" onerror="this.style.display='none'" />` : `<div class="w-full h-20 bg-rose-50 rounded-xl flex items-center justify-center text-2xl mb-2">✨</div>`}
+          class="cursor-pointer border-2 rounded-2xl overflow-hidden transition-all p-2.5 text-center flex flex-col items-center bg-white 
+          ${selectedThemeIndex === idx ? 'border-pink-500 ring-2 ring-pink-200 bg-pink-50/50 shadow-md' : 'border-slate-100 hover:border-pink-200'}">
+          ${theme.img ? `<img src="${theme.img}" class="w-full h-20 object-cover rounded-xl mb-2" />` : `<div class="w-full h-20 bg-pink-50 rounded-xl flex items-center justify-center text-2xl mb-2">✨</div>`}
           <span class="text-xs font-bold text-slate-800">${theme.title}</span>
         </div>
       `).join('');
@@ -402,7 +467,7 @@
               "Invitee Name": currentPayload.i,
               "Final Locked Date": selectedDate,
               "Chosen Date Theme": chosenTheme.title,
-              Status: "Locked In & Accepted"
+              Status: "Accepted"
             })
           });
         } catch (err) {
@@ -410,7 +475,7 @@
         }
       }
 
-      confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+      confetti({ particleCount: 160, spread: 100, origin: { y: 0.6 } });
       document.getElementById("stage-2-view").classList.add("hidden");
       document.getElementById("confirmed-view").classList.remove("hidden");
 
@@ -423,7 +488,7 @@
 
       if (chosenTheme.img) {
         document.getElementById("final-theme-image-container").innerHTML = `
-          <img src="${chosenTheme.img}" class="max-h-48 w-full object-cover rounded-xl" />
+          <img src="${chosenTheme.img}" class="max-h-48 w-full object-cover rounded-2xl" />
         `;
       }
     }
