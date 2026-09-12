@@ -12,17 +12,16 @@
   <div class="w-full max-w-lg bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border border-rose-100 p-6 md:p-8 relative">
 
     <!-- ========================================== -->
-    <!-- VIEW 1: CREATOR (Setup Invitation)         -->
+    <!-- VIEW 1: CREATOR BUILDER                   -->
     <!-- ========================================== -->
     <div id="creator-view">
       <div class="text-center mb-6">
         <span class="text-4xl">💌</span>
         <h1 class="text-2xl font-bold text-rose-600 mt-2">Create Date Invite</h1>
-        <p class="text-xs text-slate-500">Pick available dates, add theme ideas, and receive email alerts!</p>
+        <p class="text-xs text-slate-500">Pick available dates, add themes, and get RSVP email alerts!</p>
       </div>
 
       <form id="creator-form" class="space-y-4" onsubmit="generateInviteLink(event)">
-        <!-- Names -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Your Name</label>
@@ -34,13 +33,11 @@
           </div>
         </div>
 
-        <!-- Creator's Notification Email -->
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Your Email (To receive final RSVP choice)</label>
           <input type="email" id="c-email" required placeholder="your.email@example.com" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500" />
         </div>
 
-        <!-- Available Dates -->
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Your Available Dates (Pick at least 1)</label>
           <div class="flex gap-2">
@@ -50,29 +47,26 @@
           <div id="date-tags" class="flex flex-wrap gap-2 mt-2"></div>
         </div>
 
-        <!-- Themes / Activities with Mobile-Friendly Images -->
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Date Themes (Topic + Image/Emoji)</label>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Date Themes (Topic + Optional Image Link)</label>
           <div class="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
             <input type="text" id="theme-topic-input" placeholder="e.g. Cozy Ramen Date" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-rose-500 bg-white" />
-            
             <div class="flex gap-2">
               <input type="url" id="theme-pic-input" placeholder="Paste image link (optional)" class="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-rose-500 bg-white" />
               <button type="button" onclick="addThemeItem()" class="px-4 py-2 bg-rose-500 text-white font-semibold rounded-xl text-xs hover:bg-rose-600 transition">Add</button>
             </div>
-            <p class="text-[11px] text-slate-400">Tip: You can leave image link blank to use a fun default sticker.</p>
+            <p class="text-[11px] text-slate-400">Leave image link empty for a default sticker.</p>
           </div>
           <div id="theme-list" class="grid grid-cols-2 gap-2 mt-3"></div>
         </div>
 
-        <button type="submit" id="generate-btn" class="w-full mt-4 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-2xl shadow-md transition-transform active:scale-95">
-          Generate Short Shareable Link ✨
+        <button type="submit" class="w-full mt-4 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-2xl shadow-md transition-transform active:scale-95">
+          Generate Shareable Link ✨
         </button>
       </form>
 
-      <!-- Shareable Result -->
       <div id="link-result" class="hidden mt-5 p-4 bg-rose-50 rounded-2xl border border-rose-200">
-        <p class="text-xs font-semibold text-rose-800 mb-2">🎉 Your short invite link is ready!</p>
+        <p class="text-xs font-semibold text-rose-800 mb-2">🎉 Your invite link is ready!</p>
         <div class="flex gap-2">
           <input type="text" id="generated-url" readonly class="text-xs w-full bg-white p-2 rounded-lg border border-rose-200 text-slate-600 select-all" />
           <button onclick="copyInviteLink()" id="copy-btn" class="px-3 py-1 bg-rose-500 text-white text-xs font-semibold rounded-lg hover:bg-rose-600">Copy</button>
@@ -81,7 +75,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- VIEW 2: RECIPIENT STAGE 1 (Unavoidable YES)-->
+    <!-- VIEW 2: RECIPIENT STAGE 1 (Cannot say NO)  -->
     <!-- ========================================== -->
     <div id="stage-1-view" class="hidden text-center py-8">
       <div class="text-5xl mb-4 animate-bounce">💖</div>
@@ -100,7 +94,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- VIEW 3: RECIPIENT STAGE 2 (Sequential)    -->
+    <!-- VIEW 3: RECIPIENT STAGE 2 (Calendar First) -->
     <!-- ========================================== -->
     <div id="stage-2-view" class="hidden space-y-6">
       <div class="text-center">
@@ -109,7 +103,6 @@
         <p class="text-xs text-slate-500">Step 1: Pick an available date from the calendar:</p>
       </div>
 
-      <!-- Calendar -->
       <div>
         <div class="flex items-center justify-between mb-3 px-1">
           <button type="button" onclick="changeMonth(-1)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-600 font-bold">&larr;</button>
@@ -121,10 +114,9 @@
           <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
         </div>
         <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
-        <p class="text-[11px] text-slate-400 mt-2 text-center">Highlighted dates are available.</p>
+        <p class="text-[11px] text-slate-400 mt-2 text-center">Highlighted pink circles are available dates.</p>
       </div>
 
-      <!-- Step 2: Themes -->
       <div id="themes-unlock-section" class="hidden pt-4 border-t border-rose-100">
         <label class="block text-xs font-semibold text-slate-700 mb-1">Step 2: Pick your date vibe:</label>
         <p class="text-xs text-slate-400 mb-3">Selected Date: <span id="display-selected-date" class="font-bold text-rose-500"></span></p>
@@ -134,7 +126,7 @@
         <button onclick="finalizeRSVP()" id="lock-btn" disabled class="w-full mt-5 py-3 bg-rose-500 hover:bg-rose-600 disabled:opacity-50 text-white font-semibold rounded-2xl shadow-md transition-transform active:scale-95">
           Lock It In! 🔒
         </button>
-        <p id="sending-indicator" class="text-center text-xs text-slate-400 mt-2 hidden">Sending details to their inbox... 💌</p>
+        <p id="sending-indicator" class="text-center text-xs text-slate-400 mt-2 hidden">Sending confirmation email... 💌</p>
       </div>
     </div>
 
@@ -165,38 +157,43 @@
     let dodgeCount = 0;
     const teaseMessages = ["Nice try! 😉", "Are you sure? 🥺", "Wrong button! 🤭", "Nope! 💖"];
 
-    // Universal Base64 handler (iOS & Android safe)
-    function encodePayload(obj) {
-      const str = JSON.stringify(obj);
-      return encodeURIComponent(btoa(unescape(encodeURIComponent(str))));
+    // Browser & Mobile cross-compatible Base64 encoder/decoder
+    function toSafeBase64(str) {
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+        return String.fromCharCode('0x' + p1);
+      }));
     }
 
-    function decodePayload(str) {
-      const decoded = decodeURIComponent(str);
-      return JSON.parse(decodeURIComponent(escape(atob(decoded))));
+    function fromSafeBase64(str) {
+      return decodeURIComponent(Array.prototype.map.call(atob(str), (c) => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
     }
 
     window.addEventListener("DOMContentLoaded", checkInvite);
 
     function checkInvite() {
+      let rawData = null;
       const params = new URLSearchParams(window.location.search);
-      let dataStr = params.get("d");
 
-      if (!dataStr && window.location.hash.includes("#d=")) {
-        dataStr = window.location.hash.split("#d=")[1];
+      if (params.get("d")) {
+        rawData = params.get("d");
+      } else if (window.location.hash.includes("#d=")) {
+        rawData = window.location.hash.split("#d=")[1];
       }
 
-      if (dataStr) {
+      if (rawData) {
         try {
-          currentPayload = decodePayload(dataStr);
+          const clean = rawData.trim().split(/[ &?]/)[0];
+          const jsonStr = fromSafeBase64(clean);
+          currentPayload = JSON.parse(jsonStr);
           showStage1(currentPayload);
         } catch (err) {
-          console.error("Payload decoding error:", err);
+          console.error("Link decode error:", err);
         }
       }
     }
 
-    // --- CREATOR ACTIONS ---
     function addDateItem() {
       const input = document.getElementById("date-input");
       if (input.value && !availableDates.includes(input.value)) {
@@ -251,16 +248,10 @@
       `).join('');
     }
 
-    // Auto-shortening with TinyURL API
-    async function generateInviteLink(e) {
+    function generateInviteLink(e) {
       e.preventDefault();
       if (availableDates.length === 0) return alert("Please pick at least one available date!");
       if (availableThemes.length === 0) return alert("Please add at least one theme!");
-
-      const btn = document.getElementById("generate-btn");
-      const originalText = btn.innerText;
-      btn.innerText = "Generating Short Link... ⏳";
-      btn.disabled = true;
 
       const payload = {
         c: document.getElementById("c-name").value.trim(),
@@ -270,24 +261,11 @@
         t: availableThemes
       };
 
-      const encoded = encodePayload(payload);
-      const longURL = `${window.location.origin}${window.location.pathname}?d=${encoded}`;
+      const b64 = toSafeBase64(JSON.stringify(payload));
+      const fullURL = `${window.location.origin}${window.location.pathname}?d=${b64}`;
 
-      try {
-        const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longURL)}`);
-        if (res.ok) {
-          const shortURL = await res.text();
-          document.getElementById("generated-url").value = shortURL;
-        } else {
-          document.getElementById("generated-url").value = longURL;
-        }
-      } catch (err) {
-        document.getElementById("generated-url").value = longURL;
-      } finally {
-        btn.innerText = originalText;
-        btn.disabled = false;
-        document.getElementById("link-result").classList.remove("hidden");
-      }
+      document.getElementById("generated-url").value = fullURL;
+      document.getElementById("link-result").classList.remove("hidden");
     }
 
     function copyInviteLink() {
@@ -299,7 +277,6 @@
       setTimeout(() => (btn.innerText = "Copy"), 2000);
     }
 
-    // --- RECIPIENT FLOW ---
     function showStage1(data) {
       document.getElementById("creator-view").classList.add("hidden");
       document.getElementById("stage-1-view").classList.remove("hidden");
@@ -400,7 +377,6 @@
       document.getElementById("lock-btn").removeAttribute("disabled");
     }
 
-    // --- RSVP SUBMISSION & AUTOMATIC EMAIL DISPATCH ---
     async function finalizeRSVP() {
       if (!selectedDate || selectedThemeIndex === null) return;
       const chosenTheme = currentPayload.t[selectedThemeIndex];
