@@ -157,7 +157,7 @@
     let dodgeCount = 0;
     const teaseMessages = ["Nice try! 😉", "Are you sure? 🥺", "Wrong button! 🤭", "Nope! 💖"];
 
-    // Browser & Mobile cross-compatible Base64 encoder/decoder
+    // Mobile & Cross-Browser Safe Base64 Helpers
     function toSafeBase64(str) {
       return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
         return String.fromCharCode('0x' + p1);
@@ -171,20 +171,22 @@
     }
 
     window.addEventListener("DOMContentLoaded", checkInvite);
+    window.addEventListener("hashchange", checkInvite);
 
     function checkInvite() {
       let rawData = null;
-      const params = new URLSearchParams(window.location.search);
 
-      if (params.get("d")) {
+      // Hash parameter check (avoids HTTP 414 URI Too Long errors)
+      if (window.location.hash && window.location.hash.includes("d=")) {
+        rawData = window.location.hash.split("d=")[1];
+      } else {
+        const params = new URLSearchParams(window.location.search);
         rawData = params.get("d");
-      } else if (window.location.hash.includes("#d=")) {
-        rawData = window.location.hash.split("#d=")[1];
       }
 
       if (rawData) {
         try {
-          const clean = rawData.trim().split(/[ &?]/)[0];
+          const clean = decodeURIComponent(rawData).trim().split(/[ &?]/)[0];
           const jsonStr = fromSafeBase64(clean);
           currentPayload = JSON.parse(jsonStr);
           showStage1(currentPayload);
@@ -262,7 +264,8 @@
       };
 
       const b64 = toSafeBase64(JSON.stringify(payload));
-      const fullURL = `${window.location.origin}${window.location.pathname}?d=${b64}`;
+      // Using #d= instead of ?d= eliminates server-side 414 URI Too Long limits
+      const fullURL = `${window.location.origin}${window.location.pathname}#d=${b64}`;
 
       document.getElementById("generated-url").value = fullURL;
       document.getElementById("link-result").classList.remove("hidden");
