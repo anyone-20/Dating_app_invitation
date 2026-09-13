@@ -42,7 +42,7 @@
     }
     .shine:hover::after { left: 140%; }
     .link-code {
-      letter-spacing: .04em;
+      letter-spacing: .02em;
       font-variant-numeric: tabular-nums;
     }
   </style>
@@ -58,14 +58,14 @@
           <span class="text-4xl">💌</span>
         </div>
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-extrabold mb-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> READY TO SHARE
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> SHORT LINKS ACTIVE
         </div>
         <h1 class="text-3xl font-extrabold text-pink-600 font-cute tracking-tight">Plan a Date Invitation</h1>
-        <p class="text-xs text-slate-500 font-medium mt-1.5 max-w-xs mx-auto">Create a cute interactive invitation and share it directly via link.</p>
+        <p class="text-xs text-slate-500 font-medium mt-1.5 max-w-xs mx-auto">Create your interactive invitation and get a tiny WhatsApp-ready link.</p>
       </div>
 
       <form id="creator-form" class="space-y-4" onsubmit="generateInviteLink(event)">
-        <!-- Section 1: Names -->
+        <!-- Names -->
         <div class="section-card rounded-3xl p-4 space-y-3">
           <div class="flex items-center gap-2 mb-1">
             <span class="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center">👋</span>
@@ -86,19 +86,19 @@
           </div>
         </div>
 
-        <!-- Section 2: Email -->
+        <!-- Notification Email -->
         <div class="section-card rounded-3xl p-4">
           <label class="block text-xs font-bold text-slate-600 mb-1">Your Email (For RSVP Notification)</label>
           <input type="email" id="c-email" required placeholder="your.email@example.com" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
         </div>
 
-        <!-- Section 3: Available Dates -->
+        <!-- Available Dates -->
         <div class="section-card rounded-3xl p-4">
           <div class="flex items-center gap-2 mb-3">
             <span class="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center">📅</span>
             <div>
               <p class="text-xs font-extrabold text-slate-800">Choose available dates</p>
-              <p class="text-[10px] text-slate-400 font-medium">Pick at least one date for your invitee.</p>
+              <p class="text-[10px] text-slate-400 font-medium">Pick dates for your invitee to select from.</p>
             </div>
           </div>
           <label class="block text-[11px] font-bold text-slate-600 mb-1.5">Available Dates</label>
@@ -109,29 +109,25 @@
           <div id="date-tags" class="flex flex-wrap gap-2 mt-2"></div>
         </div>
 
-        <!-- Section 4: Date Vibes / Themes -->
+        <!-- Themes -->
         <div class="section-card rounded-3xl p-4">
           <div class="flex items-center gap-2 mb-3">
             <span class="w-8 h-8 rounded-xl bg-purple-100 flex items-center justify-center">✨</span>
             <div>
               <p class="text-xs font-extrabold text-slate-800">Add date vibes</p>
-              <p class="text-[10px] text-slate-400 font-medium">Give your invitee a few fun choices.</p>
+              <p class="text-[10px] text-slate-400 font-medium">Add activities or vibes for them to choose.</p>
             </div>
           </div>
           <label class="block text-[11px] font-bold text-slate-600 mb-1.5">Date Themes</label>
-          <div class="space-y-2 p-3 bg-pink-50/50 rounded-2xl border border-pink-100">
-            <input type="text" id="theme-topic-input" placeholder="e.g. Cozy Ramen Date" class="w-full px-3.5 py-2 text-xs rounded-xl border border-pink-200 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400 transition" />
-            
-            <div class="flex items-center gap-2">
-              <input type="file" id="theme-pic-input" accept="image/*" class="text-[11px] text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-pink-200 file:text-pink-700 hover:file:bg-pink-300 cursor-pointer flex-1" />
-              <button type="button" onclick="addThemeItem(event)" class="px-4 py-1.5 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-xs shadow-sm transition active:scale-95">Add</button>
-            </div>
+          <div class="flex gap-2 p-1.5 bg-pink-50/50 rounded-2xl border border-pink-100">
+            <input type="text" id="theme-topic-input" placeholder="e.g. Cozy Ramen Date 🍜" class="flex-1 px-3.5 py-2 text-xs rounded-xl border border-pink-200 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400 transition" />
+            <button type="button" onclick="addThemeItem(event)" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-xs shadow-sm transition active:scale-95">Add</button>
           </div>
           <div id="theme-list" class="grid grid-cols-2 gap-2 mt-2.5"></div>
         </div>
 
         <button type="submit" id="generate-btn" class="shine w-full py-4 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 text-white font-extrabold rounded-2xl shadow-lg shadow-pink-200 transition active:scale-[.98]">
-          Create My Invitation Link ✨
+          Create My Short Link ✨
         </button>
       </form>
 
@@ -140,8 +136,8 @@
           <div class="flex items-start gap-3">
             <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center text-xl">🎉</div>
             <div class="flex-1">
-              <p class="text-sm font-extrabold text-slate-800">Your invitation is ready!</p>
-              <p class="text-[10px] text-slate-500 mt-0.5">Send this link to your date. They will see the interactive questions and calendar!</p>
+              <p class="text-sm font-extrabold text-slate-800">Your short link is ready!</p>
+              <p class="text-[10px] text-slate-500 mt-0.5">Send this clean link via WhatsApp or Instagram DM.</p>
             </div>
           </div>
 
@@ -218,7 +214,6 @@
         <p><strong>Theme:</strong> <span id="final-theme" class="text-pink-600 font-extrabold"></span></p>
         <p id="email-sent-status" class="text-emerald-600 font-bold pt-1">✅ Details were sent directly to their email!</p>
       </div>
-      <div id="final-theme-image-container" class="rounded-2xl overflow-hidden shadow-sm max-h-56 flex justify-center bg-pink-50/50"></div>
     </div>
 
   </div>
@@ -234,30 +229,30 @@
     let dodgeCount = 0;
     const teaseMessages = ["Nice try! 😉", "Are you sure? 🥺", "Wrong button! 🤭", "Nope! 💖", "Try again! 🙈"];
 
-    // Base64 Unicode Helpers
+    // Base64 safe URL encode/decode
     function encodePayload(data) {
-      return btoa(encodeURIComponent(JSON.stringify(data)).replace(/%([0-9A-F]{2})/g, (match, p1) => {
-        return String.fromCharCode('0x' + p1);
-      }));
+      return btoa(encodeURIComponent(JSON.stringify(data)).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode('0x' + p1)));
     }
 
     function decodePayload(str) {
-      return JSON.parse(decodeURIComponent(Array.prototype.map.call(atob(str), (c) => {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join('')));
+      return JSON.parse(decodeURIComponent(Array.prototype.map.call(atob(str), (c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
     }
 
-    // Check if the page is opened via invite link (#invite=...)
+    // On Load: Check if opened via short link hash or parameter
     function checkInvite() {
-      const hash = window.location.hash;
-      if (!hash || !hash.includes("invite=")) return;
+      let hash = window.location.hash;
+      if (!hash || !hash.includes("d=")) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("d")) hash = "#d=" + params.get("d");
+      }
+      if (!hash || !hash.includes("d=")) return;
 
       try {
-        const raw = hash.replace("#invite=", "");
+        const raw = hash.split("d=")[1];
         currentPayload = decodePayload(raw);
 
         if (!currentPayload || !currentPayload.i || !Array.isArray(currentPayload.d) || !Array.isArray(currentPayload.t)) {
-          throw new Error("Invalid payload format.");
+          throw new Error("Invalid payload.");
         }
 
         showStage1(currentPayload);
@@ -291,60 +286,24 @@
     function renderDateTags() {
       document.getElementById("date-tags").innerHTML = availableDates.map((d, i) => `
         <span class="inline-flex items-center gap-1.5 bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
-          ${d} <button type="button" onclick="removeDateItem(${i})" class="hover:text-pink-900">&times;</button>
+          ${d} <button type="button" onclick="removeDateItem(${i})" class="hover:text-pink-900 font-extrabold ml-1">&times;</button>
         </span>
       `).join('');
     }
 
-    // Downsamples uploaded images to keep the generated URL reasonably sized
     function addThemeItem(e) {
       if (e) e.preventDefault();
       const topicInput = document.getElementById("theme-topic-input");
-      const picInput = document.getElementById("theme-pic-input");
       const title = topicInput.value.trim();
 
       if (!title) {
-        alert("Please enter a theme name!");
+        alert("Please enter a theme or activity name!");
         return;
       }
 
-      if (picInput.files && picInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement("canvas");
-            const maxDim = 280;
-            let width = img.width;
-            let height = img.height;
-            if (width > height) {
-              height = Math.round((height * maxDim) / width);
-              width = maxDim;
-            } else {
-              width = Math.round((width * maxDim) / height);
-              height = maxDim;
-            }
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext("2d");
-            ctx.imageSmoothingQuality = "medium";
-            ctx.drawImage(img, 0, 0, width, height);
-
-            const compressed = canvas.toDataURL("image/jpeg", 0.6);
-            availableThemes.push({ title: title, img: compressed });
-            renderThemeList();
-            topicInput.value = "";
-            picInput.value = "";
-          };
-          img.src = ev.target.result;
-        };
-        reader.readAsDataURL(picInput.files[0]);
-      } else {
-        availableThemes.push({ title: title, img: null });
-        renderThemeList();
-        topicInput.value = "";
-        picInput.value = "";
-      }
+      availableThemes.push({ title: title });
+      renderThemeList();
+      topicInput.value = "";
     }
 
     function removeThemeItem(idx) {
@@ -354,19 +313,24 @@
 
     function renderThemeList() {
       document.getElementById("theme-list").innerHTML = availableThemes.map((t, i) => `
-        <div class="relative bg-white border border-pink-100 rounded-2xl overflow-hidden flex flex-col items-center p-2 text-center shadow-sm">
-          <button type="button" onclick="removeThemeItem(${i})" class="absolute top-1 right-1 bg-slate-900/60 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">&times;</button>
-          ${t.img ? `<img src="${t.img}" class="w-full h-20 object-cover rounded-xl mb-1" />` : `<div class="w-full h-20 bg-pink-50 flex items-center justify-center text-2xl rounded-xl mb-1">✨</div>`}
-          <span class="text-xs font-bold text-slate-700 truncate w-full">${t.title}</span>
+        <div class="relative bg-white border border-pink-100 rounded-2xl p-3 flex items-center justify-between shadow-sm">
+          <span class="text-xs font-bold text-slate-700 truncate">${t.title}</span>
+          <button type="button" onclick="removeThemeItem(${i})" class="text-slate-400 hover:text-pink-600 font-extrabold text-sm ml-2">&times;</button>
         </div>
       `).join('');
     }
 
-    function generateInviteLink(e) {
+    // Generates the invite and calls the public TinyURL shortening API
+    async function generateInviteLink(e) {
       e.preventDefault();
 
       if (availableDates.length === 0) return alert("Please pick at least one available date!");
       if (availableThemes.length === 0) return alert("Please add at least one theme!");
+
+      const btn = document.getElementById("generate-btn");
+      const originalText = btn.innerText;
+      btn.innerText = "Creating Short Link... ✨";
+      btn.disabled = true;
 
       const payload = {
         c: document.getElementById("c-name").value.trim(),
@@ -377,32 +341,46 @@
       };
 
       const encoded = encodePayload(payload);
-      const cleanUrl = window.location.origin + window.location.pathname;
-      const fullInviteUrl = `${cleanUrl}#invite=${encoded}`;
+      const fullUrl = `${window.location.origin}${window.location.pathname}#d=${encoded}`;
 
-      document.getElementById("generated-url").value = fullInviteUrl;
+      let finalShortUrl = fullUrl;
+
+      // Automatically shorten using TinyURL's public API
+      try {
+        const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}`);
+        if (res.ok) {
+          const short = await res.text();
+          if (short && short.startsWith("http")) {
+            finalShortUrl = short;
+          }
+        }
+      } catch (err) {
+        console.warn("Could not reach TinyURL, using direct link instead:", err);
+      }
+
+      document.getElementById("generated-url").value = finalShortUrl;
       document.getElementById("link-result").classList.remove("hidden");
       document.getElementById("link-result").scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+      btn.innerText = originalText;
+      btn.disabled = false;
     }
 
     async function copyInviteLink() {
-      const value = document.getElementById("generated-url").value;
+      const input = document.getElementById("generated-url");
       const btn = document.getElementById("copy-btn");
 
       try {
         if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(value);
+          await navigator.clipboard.writeText(input.value);
         } else {
-          const input = document.getElementById("generated-url");
-          input.focus();
           input.select();
           document.execCommand("copy");
         }
-
         btn.innerText = "Copied ✓";
         setTimeout(() => (btn.innerText = "Copy"), 1800);
       } catch (err) {
-        alert("Copy failed. Please select the link and copy it manually.");
+        alert("Copy failed. Please copy the link manually.");
       }
     }
 
@@ -492,10 +470,9 @@
       const container = document.getElementById("recipient-themes-grid");
       container.innerHTML = currentPayload.t.map((theme, idx) => `
         <div onclick="selectTheme(${idx})" 
-          class="cursor-pointer border-2 rounded-2xl overflow-hidden transition-all p-2.5 text-center flex flex-col items-center bg-white 
-          ${selectedThemeIndex === idx ? 'border-pink-500 ring-2 ring-pink-200 bg-pink-50/50 shadow-md' : 'border-slate-100 hover:border-pink-200'}">
-          ${theme.img ? `<img src="${theme.img}" class="w-full h-24 object-cover rounded-xl mb-2" />` : `<div class="w-full h-24 bg-pink-50 rounded-xl flex items-center justify-center text-3xl mb-2">✨</div>`}
-          <span class="text-xs font-bold text-slate-800">${theme.title}</span>
+          class="cursor-pointer border-2 rounded-2xl p-3 text-center flex items-center justify-center min-h-[4rem] bg-white transition-all
+          ${selectedThemeIndex === idx ? 'border-pink-500 ring-2 ring-pink-200 bg-pink-50/50 shadow-md text-pink-600' : 'border-slate-100 hover:border-pink-200 text-slate-700'}">
+          <span class="text-xs font-bold">${theme.title}</span>
         </div>
       `).join('');
     }
@@ -545,12 +522,6 @@
 
       if (!currentPayload.e) {
         document.getElementById("email-sent-status").classList.add("hidden");
-      }
-
-      if (chosenTheme.img) {
-        document.getElementById("final-theme-image-container").innerHTML = `
-          <img src="${chosenTheme.img}" class="max-h-56 w-full object-cover rounded-2xl" />
-        `;
       }
     }
   </script>
