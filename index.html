@@ -58,10 +58,10 @@
           <span class="text-4xl">💌</span>
         </div>
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-extrabold mb-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> WHATSAPP CONNECTED • NO QUOTA LIMIT
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> INSTANT WHATSAPP CONFIRMATION
         </div>
         <h1 class="text-3xl font-extrabold text-pink-600 font-cute tracking-tight">Plan a Date Invitation</h1>
-        <p class="text-xs text-slate-500 font-medium mt-1.5 max-w-xs mx-auto">Create your invitation and get notified on WhatsApp when they lock in a date.</p>
+        <p class="text-xs text-slate-500 font-medium mt-1.5 max-w-xs mx-auto">Create your invitation and get notified automatically on WhatsApp when locked in.</p>
       </div>
 
       <form id="creator-form" class="space-y-4" onsubmit="generateInviteLink(event)">
@@ -86,16 +86,16 @@
           </div>
         </div>
 
-        <!-- Section 2: WhatsApp Number for Instant Free Notification -->
+        <!-- Section 2: WhatsApp Number -->
         <div class="section-card rounded-3xl p-4">
           <div class="flex items-center gap-2 mb-1">
             <span class="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center">📱</span>
             <div>
               <p class="text-xs font-extrabold text-slate-800">Your WhatsApp Number</p>
-              <p class="text-[10px] text-slate-400 font-medium">Receive their confirmation reply straight to your WhatsApp.</p>
+              <p class="text-[10px] text-slate-400 font-medium">Will receive their confirmation automatically.</p>
             </div>
           </div>
-          <input type="tel" id="c-phone" required placeholder="e.g. 60123456789 (with country code)" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition mt-2" />
+          <input type="tel" id="c-phone" required placeholder="e.g. 0163552160 or 60163552160" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition mt-2" />
         </div>
 
         <!-- Section 3: Available Dates -->
@@ -115,7 +115,7 @@
           <div id="date-tags" class="flex flex-wrap gap-2 mt-2"></div>
         </div>
 
-        <!-- Section 4: Date Vibes with Custom Emoji -->
+        <!-- Section 4: Date Vibes -->
         <div class="section-card rounded-3xl p-4">
           <div class="flex items-center gap-2 mb-3">
             <span class="w-8 h-8 rounded-xl bg-purple-100 flex items-center justify-center">✨</span>
@@ -226,11 +226,11 @@
         <p><strong>Theme:</strong> <span id="final-theme" class="text-pink-600 font-extrabold"></span></p>
       </div>
 
-      <!-- Free WhatsApp confirmation action -->
-      <a id="whatsapp-confirm-btn" href="#" target="_blank" class="flex items-center justify-center gap-2 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold rounded-2xl shadow-lg shadow-emerald-200 transition active:scale-95">
-        <span class="text-base">💬</span> Send Confirmation on WhatsApp
+      <!-- Manual fallback button if the auto-redirect was blocked by the browser -->
+      <a id="whatsapp-confirm-btn" href="#" class="flex items-center justify-center gap-2 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold rounded-2xl shadow-lg shadow-emerald-200 transition active:scale-95">
+        <span class="text-base">💬</span> Re-open WhatsApp Confirmation
       </a>
-      <p class="text-[10px] text-slate-400">Tap above to automatically text them the confirmed date!</p>
+      <p class="text-[10px] text-slate-400">Opening WhatsApp to notify them automatically... 🚀</p>
     </div>
 
   </div>
@@ -246,7 +246,7 @@
     let dodgeCount = 0;
     const teaseMessages = ["Nice try! 😉", "Are you sure? 🥺", "Wrong button! 🤭", "Nope! 💖", "Try again! 🙈"];
 
-    const emojiPresets = ["🍜", "☕", "🍕", "🎬", "🎨", "🎡", "🍰", "🍷", "🍦", "🧺", "🌅", "🎳", "🍣", "🌸", "👣","🌲"];
+    const emojiPresets = ["🍜", "☕", "🍕", "🎬", "🎨", "🎡", "🍰", "🍷", "🍦", "🧺", "🌅", "🎳", "🍣", "🌸"];
 
     function initEmojiPicker() {
       const container = document.getElementById("emoji-picker-container");
@@ -262,6 +262,15 @@
     function selectEmojiPreset(em) {
       document.getElementById("custom-emoji-input").value = em;
       initEmojiPicker();
+    }
+
+    // Auto-cleans and normalizes phone numbers (e.g., 0163552160 -> 60163552160)
+    function sanitizePhoneNumber(phone) {
+      let cleaned = phone.replace(/[^0-9]/g, "");
+      if (cleaned.startsWith("0")) {
+        cleaned = "60" + cleaned.substring(1);
+      }
+      return cleaned;
     }
 
     // Base64 Safe URL Encoding / Decoding
@@ -377,12 +386,11 @@
       btn.innerText = "Creating Short Link... ✨";
       btn.disabled = true;
 
-      // Clean phone number: remove all non-digit characters
-      const rawPhone = document.getElementById("c-phone").value.replace(/[^0-9]/g, "");
+      const formattedPhone = sanitizePhoneNumber(document.getElementById("c-phone").value);
 
       const payload = {
         c: document.getElementById("c-name").value.trim(),
-        p: rawPhone,
+        p: formattedPhone,
         i: document.getElementById("i-name").value.trim(),
         d: availableDates,
         t: availableThemes
@@ -393,7 +401,7 @@
 
       let finalShortUrl = fullUrl;
 
-      // Automatically shorten using TinyURL API
+      // Shorten via TinyURL
       try {
         const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}`);
         if (res.ok) {
@@ -544,14 +552,20 @@
       document.getElementById("final-theme").innerText = `${chosenTheme.emoji || '✨'} ${chosenTheme.title}`;
       document.getElementById("confirmed-emoji").innerText = chosenTheme.emoji || '🥂';
 
-      // Prefill WhatsApp text
-      const phone = currentPayload.p || "";
+      // Ensure valid international country format
+      const phone = sanitizePhoneNumber(currentPayload.p || "");
       const message = `Hey ${currentPayload.c}! 🥰 It's a date! I picked ${selectedDate} for ${chosenTheme.emoji || ''} ${chosenTheme.title}. See you then!`;
+      
       const waUrl = phone 
-        ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}` 
-        : `https://wa.me/?text=${encodeURIComponent(message)}`;
+        ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}` 
+        : `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
       
       document.getElementById("whatsapp-confirm-btn").href = waUrl;
+
+      // Auto-open WhatsApp immediately
+      setTimeout(() => {
+        window.location.href = waUrl;
+      }, 700);
     }
   </script>
 </body>
