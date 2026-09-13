@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,6 +75,7 @@
       </div>
 
       <form id="creator-form" class="space-y-4" onsubmit="generateInviteLink(event)">
+        <!-- Section 1: Names -->
         <div class="section-card rounded-3xl p-4 space-y-3">
           <div class="flex items-center gap-2 mb-1">
             <span class="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center">👋</span>
@@ -84,22 +84,25 @@
               <p class="text-[10px] text-slate-400 font-medium">A personal touch makes it more special.</p>
             </div>
           </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">Your Name</label>
-            <input type="text" id="c-name" required placeholder="Romeo" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">Date's Name</label>
-            <input type="text" id="i-name" required placeholder="Juliet" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Your Name</label>
+              <input type="text" id="c-name" required placeholder="Romeo" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Date's Name</label>
+              <input type="text" id="i-name" required placeholder="Juliet" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
+            </div>
           </div>
         </div>
 
-        <div>
+        <!-- Section 2: Email -->
+        <div class="section-card rounded-3xl p-4">
           <label class="block text-xs font-bold text-slate-600 mb-1">Your Email (For RSVP Notification)</label>
           <input type="email" id="c-email" required placeholder="your.email@example.com" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
         </div>
 
+        <!-- Section 3: Available Dates -->
         <div class="section-card rounded-3xl p-4">
           <div class="flex items-center gap-2 mb-3">
             <span class="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center">📅</span>
@@ -111,11 +114,12 @@
           <label class="block text-[11px] font-bold text-slate-600 mb-1.5">Available Dates</label>
           <div class="flex gap-2">
             <input type="date" id="date-input" class="flex-1 px-3.5 py-2 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
-            <button type="button" onclick="addDateItem()" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-2xl text-base shadow-sm transition active:scale-95">+</button>
+            <button type="button" onclick="addDateItem(event)" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-2xl text-base shadow-sm transition active:scale-95">+</button>
           </div>
           <div id="date-tags" class="flex flex-wrap gap-2 mt-2"></div>
         </div>
 
+        <!-- Section 4: Date Vibes / Themes -->
         <div class="section-card rounded-3xl p-4">
           <div class="flex items-center gap-2 mb-3">
             <span class="w-8 h-8 rounded-xl bg-purple-100 flex items-center justify-center">✨</span>
@@ -130,7 +134,7 @@
             
             <div class="flex items-center gap-2">
               <input type="file" id="theme-pic-input" accept="image/*" class="text-[11px] text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-pink-200 file:text-pink-700 hover:file:bg-pink-300 cursor-pointer flex-1" />
-              <button type="button" onclick="addThemeItem()" class="px-4 py-1.5 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-xs shadow-sm transition active:scale-95">Add</button>
+              <button type="button" onclick="addThemeItem(event)" class="px-4 py-1.5 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-xs shadow-sm transition active:scale-95">Add</button>
             </div>
           </div>
           <div id="theme-list" class="grid grid-cols-2 gap-2 mt-2.5"></div>
@@ -246,28 +250,12 @@
 
     /*
       SHORT-LINK ARCHITECTURE
-      -----------------------
-      The invitation is saved through the configured API endpoint.
-      The browser only shares: /i/<short-id>
-      Therefore personal data and image Base64 are NOT placed in the URL.
-
-      IMPORTANT:
-      Set SHORT_LINK_API below to your deployed backend endpoint.
-      Expected:
-        POST <endpoint>
-        body: { invitation: {...} }
-        response: { id: "A7k29" }
-
-      GET <endpoint>/<id>
-        response: { invitation: {...} }
-
-      Example:
-        https://your-domain.com/api/invitations
+      Set SHORT_LINK_API to your backend endpoint when deploying.
     */
     const SHORT_LINK_API = "YOUR_API_ENDPOINT_HERE";
 
     function getInviteIdFromPath() {
-      const match = window.location.pathname.match(/\\/i\\/([A-Za-z0-9_-]{4,32})\\/?$/);
+      const match = window.location.pathname.match(/\/i\/([A-Za-z0-9_-]{4,32})\/?$/);
       return match ? match[1] : null;
     }
 
@@ -281,7 +269,7 @@
           return;
         }
 
-        const response = await fetch(`${SHORT_LINK_API.replace(/\\/$/, "")}/${encodeURIComponent(id)}`, {
+        const response = await fetch(`${SHORT_LINK_API.replace(/\/$/, "")}/${encodeURIComponent(id)}`, {
           headers: { "Accept": "application/json" }
         });
 
@@ -309,20 +297,26 @@
           <div class="text-5xl mb-4">💔</div>
           <h2 class="text-xl font-extrabold text-slate-800">Invitation unavailable</h2>
           <p class="text-xs text-slate-500 mt-2 max-w-xs mx-auto">${message}</p>
-          <button onclick="window.location.href = window.location.origin + window.location.pathname.replace(/\\/i\\/[^/]+\\/?$/, '')"
+          <button onclick="window.location.href = window.location.origin + window.location.pathname.replace(/\/i\/[^/]+\/?$/, '')"
             class="mt-5 px-5 py-2.5 rounded-2xl bg-pink-500 text-white text-xs font-bold">Create an invitation</button>
         </div>`;
     }
 
     window.addEventListener("DOMContentLoaded", checkInvite);
 
-    function addDateItem() {
+    function addDateItem(e) {
+      if (e) e.preventDefault();
       const input = document.getElementById("date-input");
-      if (input.value && !availableDates.includes(input.value)) {
-        availableDates.push(input.value);
-        renderDateTags();
-        input.value = "";
+      const val = input.value;
+      if (!val) {
+        alert("Please pick a valid date first!");
+        return;
       }
+      if (!availableDates.includes(val)) {
+        availableDates.push(val);
+        renderDateTags();
+      }
+      input.value = "";
     }
 
     function removeDateItem(idx) {
@@ -338,17 +332,20 @@
       `).join('');
     }
 
-    // High-clarity 320px downsampler (crisp on mobile, lightweight in payload)
-    function addThemeItem() {
+    function addThemeItem(e) {
+      if (e) e.preventDefault();
       const topicInput = document.getElementById("theme-topic-input");
       const picInput = document.getElementById("theme-pic-input");
       const title = topicInput.value.trim();
 
-      if (!title) return alert("Please enter a theme name!");
+      if (!title) {
+        alert("Please enter a theme name!");
+        return;
+      }
 
       if (picInput.files && picInput.files[0]) {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = (ev) => {
           const img = new Image();
           img.onload = () => {
             const canvas = document.createElement("canvas");
@@ -374,7 +371,7 @@
             topicInput.value = "";
             picInput.value = "";
           };
-          img.src = e.target.result;
+          img.src = ev.target.result;
         };
         reader.readAsDataURL(picInput.files[0]);
       } else {
