@@ -23,16 +23,6 @@
       backdrop-filter: blur(18px);
       box-shadow: 0 25px 70px -25px rgba(190, 24, 93, 0.28);
     }
-    .input-shell {
-      background: rgba(255,255,255,.78);
-      border: 1px solid rgba(244,114,182,.20);
-      transition: .2s ease;
-    }
-    .input-shell:focus-within {
-      border-color: rgba(236,72,153,.55);
-      box-shadow: 0 0 0 4px rgba(236,72,153,.09);
-      background: white;
-    }
     .section-card {
       background: linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,247,250,.82));
       border: 1px solid rgba(244,114,182,.16);
@@ -52,7 +42,7 @@
     }
     .shine:hover::after { left: 140%; }
     .link-code {
-      letter-spacing: .08em;
+      letter-spacing: .04em;
       font-variant-numeric: tabular-nums;
     }
   </style>
@@ -68,10 +58,10 @@
           <span class="text-4xl">💌</span>
         </div>
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-extrabold mb-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> SHORT LINKS
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> READY TO SHARE
         </div>
         <h1 class="text-3xl font-extrabold text-pink-600 font-cute tracking-tight">Plan a Date Invitation</h1>
-        <p class="text-xs text-slate-500 font-medium mt-1.5 max-w-xs mx-auto">Create a cute interactive invitation and share it with one short, WhatsApp-friendly link.</p>
+        <p class="text-xs text-slate-500 font-medium mt-1.5 max-w-xs mx-auto">Create a cute interactive invitation and share it directly via link.</p>
       </div>
 
       <form id="creator-form" class="space-y-4" onsubmit="generateInviteLink(event)">
@@ -141,7 +131,7 @@
         </div>
 
         <button type="submit" id="generate-btn" class="shine w-full py-4 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 text-white font-extrabold rounded-2xl shadow-lg shadow-pink-200 transition active:scale-[.98]">
-          Create My Short Link ✨
+          Create My Invitation Link ✨
         </button>
       </form>
 
@@ -151,17 +141,13 @@
             <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center text-xl">🎉</div>
             <div class="flex-1">
               <p class="text-sm font-extrabold text-slate-800">Your invitation is ready!</p>
-              <p class="text-[10px] text-slate-500 mt-0.5">This link uses a short invitation ID, so WhatsApp can display it cleanly.</p>
+              <p class="text-[10px] text-slate-500 mt-0.5">Send this link to your date. They will see the interactive questions and calendar!</p>
             </div>
           </div>
 
           <div class="mt-3 flex gap-2">
             <input type="text" id="generated-url" readonly class="text-xs flex-1 min-w-0 bg-white p-3 rounded-2xl border border-pink-100 text-slate-700 font-bold link-code focus:outline-none" />
             <button onclick="copyInviteLink()" id="copy-btn" class="px-4 rounded-2xl bg-pink-500 text-white text-xs font-extrabold hover:bg-pink-600 transition active:scale-95">Copy</button>
-          </div>
-          <div class="flex items-center justify-between mt-2 px-1">
-            <span id="link-size" class="text-[10px] text-emerald-600 font-bold"></span>
-            <span class="text-[10px] text-slate-400">Short ID sharing</span>
           </div>
         </div>
       </div>
@@ -248,58 +234,36 @@
     let dodgeCount = 0;
     const teaseMessages = ["Nice try! 😉", "Are you sure? 🥺", "Wrong button! 🤭", "Nope! 💖", "Try again! 🙈"];
 
-    /*
-      SHORT-LINK ARCHITECTURE
-      Set SHORT_LINK_API to your backend endpoint when deploying.
-    */
-    const SHORT_LINK_API = "YOUR_API_ENDPOINT_HERE";
-
-    function getInviteIdFromPath() {
-      const match = window.location.pathname.match(/\/i\/([A-Za-z0-9_-]{4,32})\/?$/);
-      return match ? match[1] : null;
+    // Base64 Unicode Helpers
+    function encodePayload(data) {
+      return btoa(encodeURIComponent(JSON.stringify(data)).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+        return String.fromCharCode('0x' + p1);
+      }));
     }
 
-    async function checkInvite() {
-      const id = getInviteIdFromPath();
-      if (!id) return;
+    function decodePayload(str) {
+      return JSON.parse(decodeURIComponent(Array.prototype.map.call(atob(str), (c) => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join('')));
+    }
+
+    // Check if the page is opened via invite link (#invite=...)
+    function checkInvite() {
+      const hash = window.location.hash;
+      if (!hash || !hash.includes("invite=")) return;
 
       try {
-        if (!SHORT_LINK_API || SHORT_LINK_API === "YOUR_API_ENDPOINT_HERE") {
-          showLoadError("Short-link API is not configured yet. Set SHORT_LINK_API in this file.");
-          return;
-        }
-
-        const response = await fetch(`${SHORT_LINK_API.replace(/\/$/, "")}/${encodeURIComponent(id)}`, {
-          headers: { "Accept": "application/json" }
-        });
-
-        if (!response.ok) throw new Error(`Server returned ${response.status}`);
-
-        const result = await response.json();
-        currentPayload = result.invitation || result;
+        const raw = hash.replace("#invite=", "");
+        currentPayload = decodePayload(raw);
 
         if (!currentPayload || !currentPayload.i || !Array.isArray(currentPayload.d) || !Array.isArray(currentPayload.t)) {
-          throw new Error("Invalid invitation data.");
+          throw new Error("Invalid payload format.");
         }
 
         showStage1(currentPayload);
       } catch (err) {
-        console.error("Invite loading error:", err);
-        showLoadError("This invitation could not be loaded. The link may have expired or the server may be unavailable.");
+        console.error("Invite parse error:", err);
       }
-    }
-
-    function showLoadError(message) {
-      document.getElementById("creator-view").classList.add("hidden");
-      document.getElementById("stage-1-view").classList.remove("hidden");
-      document.getElementById("stage-1-view").innerHTML = `
-        <div class="py-10 text-center">
-          <div class="text-5xl mb-4">💔</div>
-          <h2 class="text-xl font-extrabold text-slate-800">Invitation unavailable</h2>
-          <p class="text-xs text-slate-500 mt-2 max-w-xs mx-auto">${message}</p>
-          <button onclick="window.location.href = window.location.origin + window.location.pathname.replace(/\/i\/[^/]+\/?$/, '')"
-            class="mt-5 px-5 py-2.5 rounded-2xl bg-pink-500 text-white text-xs font-bold">Create an invitation</button>
-        </div>`;
     }
 
     window.addEventListener("DOMContentLoaded", checkInvite);
@@ -332,6 +296,7 @@
       `).join('');
     }
 
+    // Downsamples uploaded images to keep the generated URL reasonably sized
     function addThemeItem(e) {
       if (e) e.preventDefault();
       const topicInput = document.getElementById("theme-topic-input");
@@ -349,7 +314,7 @@
           const img = new Image();
           img.onload = () => {
             const canvas = document.createElement("canvas");
-            const maxDim = 560;
+            const maxDim = 280;
             let width = img.width;
             let height = img.height;
             if (width > height) {
@@ -362,10 +327,10 @@
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext("2d");
-            ctx.imageSmoothingQuality = "high";
+            ctx.imageSmoothingQuality = "medium";
             ctx.drawImage(img, 0, 0, width, height);
 
-            const compressed = canvas.toDataURL("image/jpeg", 0.78);
+            const compressed = canvas.toDataURL("image/jpeg", 0.6);
             availableThemes.push({ title: title, img: compressed });
             renderThemeList();
             topicInput.value = "";
@@ -397,16 +362,11 @@
       `).join('');
     }
 
-    async function generateInviteLink(e) {
+    function generateInviteLink(e) {
       e.preventDefault();
 
       if (availableDates.length === 0) return alert("Please pick at least one available date!");
       if (availableThemes.length === 0) return alert("Please add at least one theme!");
-
-      const btn = document.getElementById("generate-btn");
-      const originalText = btn.innerText;
-      btn.innerText = "Saving Invitation... ⏳";
-      btn.disabled = true;
 
       const payload = {
         c: document.getElementById("c-name").value.trim(),
@@ -416,40 +376,13 @@
         t: availableThemes
       };
 
-      try {
-        if (!SHORT_LINK_API || SHORT_LINK_API === "YOUR_API_ENDPOINT_HERE") {
-          throw new Error("SHORT_LINK_API is not configured.");
-        }
+      const encoded = encodePayload(payload);
+      const cleanUrl = window.location.origin + window.location.pathname;
+      const fullInviteUrl = `${cleanUrl}#invite=${encoded}`;
 
-        const response = await fetch(SHORT_LINK_API, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({ invitation: payload })
-        });
-
-        if (!response.ok) throw new Error(`Server returned ${response.status}`);
-
-        const result = await response.json();
-        const id = result.id || result.shortId || result.key;
-
-        if (!id) throw new Error("The API did not return an invitation ID.");
-
-        const shortURL = `${window.location.origin}/i/${encodeURIComponent(id)}`;
-        document.getElementById("generated-url").value = shortURL;
-        document.getElementById("link-size").innerText = `${shortURL.length} characters • Short invitation ID`;
-        document.getElementById("link-result").classList.remove("hidden");
-        document.getElementById("link-result").scrollIntoView({ behavior: "smooth", block: "nearest" });
-
-      } catch (err) {
-        console.error("Create short link error:", err);
-        alert("The invitation could not be saved. Please make sure your Short Link API is configured and available.");
-      } finally {
-        btn.innerText = originalText;
-        btn.disabled = false;
-      }
+      document.getElementById("generated-url").value = fullInviteUrl;
+      document.getElementById("link-result").classList.remove("hidden");
+      document.getElementById("link-result").scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
     async function copyInviteLink() {
