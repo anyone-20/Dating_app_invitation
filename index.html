@@ -58,10 +58,10 @@
           <span class="text-4xl">💌</span>
         </div>
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-extrabold mb-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> AUTO WHATSAPP DISPATCH
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> EMAIL NOTIFICATIONS ACTIVE
         </div>
         <h1 class="text-3xl font-extrabold text-pink-600 font-cute tracking-tight">Plan a Date Invitation</h1>
-        <p class="text-xs text-slate-500 font-medium mt-1.5 max-w-xs mx-auto">Create your invitation and get notified directly on WhatsApp the second they pick a date.</p>
+        <p class="text-xs text-slate-500 font-medium mt-1.5 max-w-xs mx-auto">Create your invitation and get an email confirmation as soon as they choose a date.</p>
       </div>
 
       <form id="creator-form" class="space-y-4" onsubmit="generateInviteLink(event)">
@@ -86,36 +86,16 @@
           </div>
         </div>
 
-        <!-- Section 2: Country Code & WhatsApp Number -->
+        <!-- Section 2: Email -->
         <div class="section-card rounded-3xl p-4">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center">📱</span>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center">📬</span>
             <div>
-              <p class="text-xs font-extrabold text-slate-800">Your WhatsApp Number</p>
-              <p class="text-[10px] text-slate-400 font-medium">Auto-receives their locked-in date.</p>
+              <p class="text-xs font-extrabold text-slate-800">Your Email Address</p>
+              <p class="text-[10px] text-slate-400 font-medium">Where their RSVP response will be delivered.</p>
             </div>
           </div>
-
-          <div class="flex gap-2 mt-1">
-            <select id="country-code-select" class="w-32 px-2.5 py-2.5 text-xs font-bold rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition text-slate-700">
-              <option value="60" selected>🇲🇾 +60 (MY)</option>
-              <option value="65">🇸🇬 +65 (SG)</option>
-              <option value="62">🇮🇩 +62 (ID)</option>
-              <option value="66">🇹🇭 +66 (TH)</option>
-              <option value="84">🇻🇳 +84 (VN)</option>
-              <option value="63">🇵🇭 +63 (PH)</option>
-              <option value="1">🇺🇸/🇨🇦 +1 (US/CA)</option>
-              <option value="44">🇬🇧 +44 (UK)</option>
-              <option value="61">🇦🇺 +61 (AU)</option>
-              <option value="852">🇭🇰 +852 (HK)</option>
-              <option value="886">🇹🇼 +886 (TW)</option>
-              <option value="81">🇯🇵 +81 (JP)</option>
-              <option value="82">🇰🇷 +82 (KR)</option>
-              <option value="91">🇮🇳 +91 (IN)</option>
-              <option value="86">🇨🇳 +86 (CN)</option>
-            </select>
-            <input type="tel" id="c-phone" required placeholder="163552160" class="flex-1 min-w-0 px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition" />
-          </div>
+          <input type="email" id="c-email" required placeholder="your.email@example.com" class="w-full px-3.5 py-2.5 text-sm rounded-2xl bg-pink-50/40 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition mt-2" />
         </div>
 
         <!-- Section 3: Available Dates -->
@@ -231,6 +211,7 @@
         <button onclick="finalizeRSVP()" id="lock-btn" disabled class="w-full mt-5 py-3.5 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 disabled:opacity-40 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 transition active:scale-95">
           Lock It In! 🔒
         </button>
+        <p id="sending-indicator" class="text-center text-xs text-pink-500 font-bold mt-2 hidden animate-pulse">Sending confirmation email... 💌</p>
       </div>
     </div>
 
@@ -244,13 +225,8 @@
       <div class="bg-pink-50/60 p-4 rounded-3xl border border-pink-100 text-left text-xs space-y-2 text-slate-700">
         <p><strong>Date:</strong> <span id="final-date" class="text-pink-600 font-extrabold"></span></p>
         <p><strong>Theme:</strong> <span id="final-theme" class="text-pink-600 font-extrabold"></span></p>
+        <p id="email-sent-status" class="text-emerald-600 font-bold pt-1">✅ Details were sent directly to their email!</p>
       </div>
-
-      <!-- Fallback button if auto-redirect was delayed -->
-      <a id="whatsapp-confirm-btn" href="#" class="flex items-center justify-center gap-2 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold rounded-2xl shadow-lg shadow-emerald-200 transition active:scale-95">
-        <span class="text-base">💬</span> Open WhatsApp Confirmation
-      </a>
-      <p class="text-[10px] text-slate-400">Opening WhatsApp with your date details automatically... 🚀</p>
     </div>
 
   </div>
@@ -397,15 +373,9 @@
       btn.innerText = "Creating Short Link... ✨";
       btn.disabled = true;
 
-      // Extract and format phone with selected country code
-      const code = document.getElementById("country-code-select").value;
-      let rawNum = document.getElementById("c-phone").value.replace(/[^0-9]/g, "");
-      if (rawNum.startsWith("0")) rawNum = rawNum.substring(1); // remove leading zero
-      const fullInternationalPhone = code + rawNum;
-
       const payload = {
         c: document.getElementById("c-name").value.trim(),
-        p: fullInternationalPhone,
+        e: document.getElementById("c-email").value.trim(),
         i: document.getElementById("i-name").value.trim(),
         d: availableDates,
         t: availableThemes
@@ -416,6 +386,7 @@
 
       let finalShortUrl = fullUrl;
 
+      // Shorten via TinyURL
       try {
         const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}`);
         if (res.ok) {
@@ -554,9 +525,36 @@
       document.getElementById("lock-btn").removeAttribute("disabled");
     }
 
-    function finalizeRSVP() {
+    async function finalizeRSVP() {
       if (!selectedDate || selectedThemeIndex === null) return;
       const chosenTheme = currentPayload.t[selectedThemeIndex];
+
+      const lockBtn = document.getElementById("lock-btn");
+      const indicator = document.getElementById("sending-indicator");
+      lockBtn.disabled = true;
+      indicator.classList.remove("hidden");
+
+      // Send RSVP notification directly to creator's email
+      if (currentPayload.e) {
+        try {
+          await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(currentPayload.e)}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({
+              _subject: `💖 Date Accepted! ${currentPayload.i} confirmed for ${selectedDate}`,
+              "Invitee Name": currentPayload.i,
+              "Final Locked Date": selectedDate,
+              "Chosen Date Theme": `${chosenTheme.emoji || '✨'} ${chosenTheme.title}`,
+              Status: "Accepted"
+            })
+          });
+        } catch (err) {
+          console.warn("Could not dispatch email:", err);
+        }
+      }
 
       confetti({ particleCount: 160, spread: 100, origin: { y: 0.6 } });
       document.getElementById("stage-2-view").classList.add("hidden");
@@ -566,17 +564,9 @@
       document.getElementById("final-theme").innerText = `${chosenTheme.emoji || '✨'} ${chosenTheme.title}`;
       document.getElementById("confirmed-emoji").innerText = chosenTheme.emoji || '🥂';
 
-      // Build official WhatsApp URL
-      const phone = (currentPayload.p || "").replace(/[^0-9]/g, "");
-      const message = `Hey ${currentPayload.c}! 🥰 It's a date! I picked ${selectedDate} for ${chosenTheme.emoji || ''} ${chosenTheme.title}. See you then!`;
-      const waUrl = phone 
-        ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`
-        : `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-      
-      document.getElementById("whatsapp-confirm-btn").href = waUrl;
-
-      // Immediately navigate to WhatsApp
-      window.location.href = waUrl;
+      if (!currentPayload.e) {
+        document.getElementById("email-sent-status").classList.add("hidden");
+      }
     }
   </script>
 </body>
